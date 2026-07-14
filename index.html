@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Vibe Coding 規格說明書生成平台 | Tony Studio</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Marked.js for Markdown Rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap');
+        body { font-family: 'Noto Sans TC', sans-serif; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* Markdown Styles */
+        .prose h1 { font-size: 1.875rem; font-weight: 700; margin-bottom: 1rem; color: #1e293b; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem; }
+        .prose h2 { font-size: 1.5rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem; color: #334155; }
+        .prose h3 { font-size: 1.25rem; font-weight: 600; margin-top: 1.25rem; margin-bottom: 0.5rem; color: #475569; }
+        .prose ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1rem; }
+        .prose ol { list-style-type: decimal; padding-left: 1.5rem; margin-bottom: 1rem; }
+        .prose li { margin-bottom: 0.25rem; }
+        .prose p { margin-bottom: 1rem; line-height: 1.75; color: #334155; }
+        .prose code { background-color: #f1f5f9; padding: 0.2rem 0.4rem; border-radius: 0.25rem; font-family: monospace; color: #ef4444; }
+        .prose pre { background-color: #1e293b; color: #f8fafc; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; margin-bottom: 1rem; }
+        .prose pre code { background-color: transparent; color: inherit; padding: 0; }
+        .prose blockquote { border-left: 4px solid #cbd5e1; padding-left: 1rem; font-style: italic; color: #64748b; }
+        .prose table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
+        .prose th, .prose td { border: 1px solid #e2e8f0; padding: 0.5rem; text-align: left; }
+        .prose th { background-color: #f8fafc; font-weight: 600; }
+        
+        .pt-safe { padding-top: env(safe-area-inset-top, 1rem); }
+        .pb-safe { padding-bottom: env(safe-area-inset-bottom, 1rem); }
+
+        /* Spam Warning Box Style */
+        .spam-warning-box {
+            background-color: #3e3325;
+            color: #ecd873;
+            border: 1px solid #594c34;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-800 overflow-hidden h-[100dvh] relative">
+
+    <!-- ==================== AUTH GATE ==================== -->
+    <div id="auth-gate" class="absolute inset-0 z-50 bg-slate-900 flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-slate-800 rounded-2xl shadow-2xl w-full max-w-md border border-slate-700 overflow-hidden flex flex-col">
+            <!-- Header -->
+            <div class="p-6 text-center border-b border-slate-700 bg-slate-800/50">
+                <img src="https://i.postimg.cc/fT2sQW09/1.png" alt="Logo" class="h-16 w-16 rounded-xl bg-white p-2 mx-auto mb-4 shadow-lg">
+                <h1 class="text-2xl font-bold text-white tracking-wide">Vibe Coding 平台</h1>
+                <p class="text-sm text-slate-400 mt-1">請登入以繼續使用規格生成服務</p>
+            </div>
+
+            <!-- Login Form -->
+            <div id="login-form-container" class="p-6 space-y-5">
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">電子信箱</label>
+                    <input type="email" id="login-email" class="w-full bg-slate-700 text-white p-3 rounded focus:ring-2 focus:ring-blue-500 outline-none transition-shadow" placeholder="your@email.com">
+                </div>
+                <div>
+                    <div class="flex justify-between mb-1">
+                        <label class="block text-sm font-medium text-slate-300">密碼</label>
+                        <button onclick="switchAuthView('forgot')" class="text-xs text-blue-400 hover:text-blue-300">忘記密碼？</button>
+                    </div>
+                    <div class="relative">
+                        <input type="password" id="login-password" class="w-full bg-slate-700 text-white p-3 rounded focus:ring-2 focus:ring-blue-500 outline-none transition-shadow pr-10" placeholder="••••••••">
+                        <button onclick="togglePasswordVisibility('login-password', 'login-eye')" class="absolute right-3 top-3 text-slate-400 hover:text-slate-200">
+                            <i id="login-eye" class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <button id="btn-login" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-4 rounded shadow-lg transition-colors flex justify-center items-center gap-2">
+                    <i class="fa-solid fa-right-to-bracket"></i> 登入系統
+                </button>
+                <p class="text-center text-sm text-slate-400 mt-4">
+                    還沒有帳號嗎？ <button onclick="switchAuthView('register')" class="text-blue-400 hover:text-blue-300 font-medium">立即註冊</button>
+                </p>
+            </div>
+
+            <!-- Register Form -->
+            <div id="register-form-container" class="p-6 space-y-4 hidden">
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">真實姓名</label>
+                    <input type="text" id="reg-name" class="w-full bg-slate-700 text-white p-3 rounded focus:ring-2 focus:ring-blue-500 outline-none" placeholder="請輸入本名">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">身分選擇</label>
+                    <select id="reg-identity" class="w-full bg-slate-700 text-white p-3 rounded focus:ring-2 focus:ring-blue-500 outline-none cursor-pointer appearance-none">
+                        <option value="TONY老師學員">TONY老師學員</option>
+                        <option value="非學員(一般訪客)">非學員 (一般訪客)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">電子信箱</label>
+                    <input type="email" id="reg-email" class="w-full bg-slate-700 text-white p-3 rounded focus:ring-2 focus:ring-blue-500 outline-none" placeholder="your@email.com">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">密碼</label>
+                    <div class="relative">
+                        <input type="password" id="reg-password" class="w-full bg-slate-700 text-white p-3 rounded focus:ring-2 focus:ring-blue-500 outline-none pr-10" placeholder="設定至少 6 碼密碼">
+                        <button onclick="togglePasswordVisibility('reg-password', 'reg-eye')" class="absolute right-3 top-3 text-slate-400 hover:text-slate-200">
+                            <i id="reg-eye" class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="spam-warning-box px-4 py-3 rounded-md text-sm font-medium flex items-start gap-2 shadow-sm mt-2">
+                    <i class="fa-solid fa-triangle-exclamation mt-0.5 text-amber-500"></i>
+                    <span>溫馨提醒：註冊確認信有時會跑到「垃圾郵件匣」，請記得前往確認唷！</span>
+                </div>
+
+                <button id="btn-register" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-3 px-4 rounded shadow-lg transition-colors flex justify-center items-center gap-2 mt-2">
+                    <i class="fa-solid fa-user-plus"></i> 註冊並發送驗證信
+                </button>
+                <p class="text-center text-sm text-slate-400 mt-4">
+                    已有帳號？ <button onclick="switchAuthView('login')" class="text-blue-400 hover:text-blue-300 font-medium">返回登入</button>
+                </p>
+            </div>
+
+            <!-- Forgot Password Form -->
+            <div id="forgot-form-container" class="p-6 space-y-5 hidden">
+                <p class="text-sm text-slate-400 text-center mb-2">請輸入您的註冊信箱，我們將發送密碼重設連結給您。</p>
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">電子信箱</label>
+                    <input type="email" id="forgot-email" class="w-full bg-slate-700 text-white p-3 rounded focus:ring-2 focus:ring-blue-500 outline-none" placeholder="your@email.com">
+                </div>
+                
+                <div class="spam-warning-box px-4 py-3 rounded-md text-sm font-medium flex items-start gap-2 shadow-sm">
+                    <i class="fa-solid fa-triangle-exclamation mt-0.5 text-amber-500"></i>
+                    <span>溫馨提醒：重設確認信有時會跑到「垃圾郵件匣」，請記得前往確認唷！</span>
+                </div>
+
+                <button id="btn-forgot" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-3 px-4 rounded shadow-lg transition-colors flex justify-center items-center gap-2">
+                    <i class="fa-solid fa-envelope-circle-check"></i> 發送重設信
+                </button>
+                <p class="text-center text-sm text-slate-400 mt-4">
+                    記起密碼了？ <button onclick="switchAuthView('login')" class="text-blue-400 hover:text-blue-300 font-medium">返回登入</button>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MAIN APP ==================== -->
+    <div id="main-app" class="hidden absolute inset-0 z-10 flex flex-col overflow-hidden bg-slate-50">
+        <!-- Header: Increased padding for status bar safety -->
+        <header class="bg-slate-800 text-white pt-16 px-4 pb-4 shadow-md flex flex-wrap justify-between items-center z-40 gap-3 shrink-0">
+            <div class="flex items-center gap-3 w-full md:w-auto">
+                <img src="https://i.postimg.cc/fT2sQW09/1.png" alt="Logo" class="h-10 w-10 rounded bg-white p-1 shadow-sm">
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h1 class="text-lg font-bold tracking-wide leading-tight">Vibe Coding 規格生成平台</h1>
+                        <span class="text-[10px] bg-gradient-to-r from-blue-600 to-purple-600 text-white px-2 py-0.5 rounded-full font-medium shadow-sm border border-white/20 whitespace-nowrap"><i class="fa-solid fa-bolt text-yellow-300 mr-1"></i>Gemini 3.5 Flash</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mt-0.5" id="header-user-welcome">Powered by Tony Studio</p>
+                </div>
+            </div>
+            <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+                
+                <div id="admin-btn-container" class="hidden">
+                    <button onclick="switchSystemView('admin')" class="text-sm bg-purple-700 hover:bg-purple-600 text-white px-3 py-2 md:py-1.5 rounded transition-colors flex items-center gap-2 border border-purple-600 shadow-sm shrink-0">
+                        <i class="fa-solid fa-user-shield"></i>
+                        <span>管理後台</span>
+                    </button>
+                </div>
+
+                <button onclick="toggleHistoryModal()" class="text-sm bg-blue-700 hover:bg-blue-600 text-white px-3 py-2 md:py-1.5 rounded transition-colors flex items-center gap-2 border border-blue-600 shadow-sm shrink-0">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                    <span>歷史紀錄</span>
+                </button>
+                <button onclick="toggleAboutModal()" class="text-sm bg-slate-700 hover:bg-slate-600 px-3 py-2 md:py-1.5 rounded transition-colors flex items-center gap-2 border border-slate-600 shadow-sm shrink-0">
+                    <img src="https://i.postimg.cc/Gh8Zt7SX/S_56844323.jpg" class="w-5 h-5 rounded-full border border-white">
+                    <span>關於顧問</span>
+                </button>
+
+                <div class="hidden md:block h-6 w-px bg-slate-600"></div>
+
+                <div class="relative group flex-1 md:flex-none flex items-center gap-2">
+                    <div class="relative flex-1 md:w-52">
+                        <input type="password" id="apiKey" placeholder="Gemini 3.5 Flash API Key" 
+                            class="w-full bg-slate-700 text-sm px-3 py-2 md:py-1.5 rounded border border-slate-600 focus:outline-none focus:border-blue-400 transition-all text-white">
+                        <div class="absolute right-2 top-2 md:top-1.5 text-slate-400 cursor-pointer" onclick="toggleApiKeyVisibility('apiKey', 'eyeIcon')">
+                            <i class="fa-solid fa-eye" id="eyeIcon"></i>
+                        </div>
+                    </div>
+                    <label class="flex items-center cursor-pointer text-xs text-slate-300 gap-1 shrink-0">
+                        <input type="checkbox" id="saveApiKey" class="form-checkbox h-3 w-3 text-blue-500 rounded focus:ring-0">
+                        記住
+                    </label>
+                </div>
+
+                <button onclick="handleLogout()" class="text-sm text-red-400 hover:text-red-300 transition-colors ml-1" title="登出">
+                    <i class="fa-solid fa-arrow-right-from-bracket text-lg"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-1 flex flex-col md:flex-row overflow-hidden min-h-0">
+            <!-- Left Panel -->
+            <div class="w-full md:w-1/3 h-1/2 md:h-full bg-white border-b md:border-b-0 md:border-r border-slate-200 flex flex-col shadow-lg z-0 relative">
+                <div class="p-4 bg-slate-100 border-b border-slate-200 flex justify-between items-center shrink-0">
+                    <h2 class="font-bold text-slate-700"><i class="fa-solid fa-pen-to-square mr-2"></i>需求定義</h2>
+                    <div class="flex gap-2 text-xs">
+                        <button onclick="autoFillForm()" title="✨ AI 根據標題自動填寫" class="text-purple-600 hover:text-purple-800 font-medium px-2 py-1 bg-purple-50 rounded border border-purple-200 hover:bg-purple-100 transition-colors">
+                            <i class="fa-solid fa-sparkles mr-1"></i>AI 幫我想
+                        </button>
+                        <button onclick="clearForm()" class="text-slate-500 hover:text-red-500 underline px-2 py-1">清空</button>
+                    </div>
+                </div>
+                
+                <div class="flex-1 overflow-y-auto p-5 space-y-6 pb-24" id="inputForm">
+                    <div class="space-y-3">
+                        <h3 class="text-sm font-bold text-blue-600 uppercase tracking-wider border-b border-blue-100 pb-1">1. 專案基本資訊</h3>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">專案名稱 (檔案名)</label>
+                            <input type="text" id="projectName" class="w-full p-2 border border-slate-300 rounded text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none" placeholder="例如：Vibe PRD Builder">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">一句話描述 (Elevator Pitch)</label>
+                            <input type="text" id="oneLiner" class="w-full p-2 border border-slate-300 rounded text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none" placeholder="把顧問思維產品化成規格生產機">
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <h3 class="text-sm font-bold text-blue-600 uppercase tracking-wider border-b border-blue-100 pb-1">2. 需求層 (The Why)</h3>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">問題背景與痛點</label>
+                            <textarea id="background" rows="3" class="w-full p-2 border border-slate-300 rounded text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none" placeholder="為什麼要做？現在的流程哪裡卡住？"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">目標使用者 (Persona)</label>
+                            <input type="text" id="targetUser" class="w-full p-2 border border-slate-300 rounded text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none" placeholder="產品經理、講師、工程師...">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">不做什麼 (Scope Exclusion)</label>
+                            <input type="text" id="exclusions" class="w-full p-2 border border-slate-300 rounded text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none" placeholder="例如：不做後端資料庫、不做使用者登入系統">
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <h3 class="text-sm font-bold text-blue-600 uppercase tracking-wider border-b border-blue-100 pb-1">3. 期望成果 (Outcome)</h3>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">成功標準 (KPI/Result)</label>
+                            <textarea id="successMetrics" rows="2" class="w-full p-2 border border-slate-300 rounded text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none" placeholder="例如：產出能直接給工程師的文件、節省 80% 溝通時間"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <h3 class="text-sm font-bold text-blue-600 uppercase tracking-wider border-b border-blue-100 pb-1">4. 必要規格 (Constraints)</h3>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">開發型態</label>
+                                <select id="devType" class="w-full p-2 border border-slate-300 rounded text-sm bg-white cursor-pointer">
+                                    <option value="純前端/瀏覽器儲存">純前端 (Local Storage)</option>
+                                    <option value="前後端分離">前後端分離</option>
+                                    <option value="全端 (Next.js)">全端 (Next.js)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">
+                                    技術堆疊 <span class="text-xs text-blue-500 font-normal">(可選)</span>
+                                </label>
+                                <div class="flex">
+                                    <input type="text" id="techStack" class="w-full p-2 border border-slate-300 border-r-0 rounded-l text-sm bg-white focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none" placeholder="輸入或右側選取...">
+                                    <select onchange="document.getElementById('techStack').value=this.value; this.selectedIndex=0;" class="bg-slate-100 border border-slate-300 rounded-r text-sm px-2 cursor-pointer hover:bg-slate-200 w-12 text-center appearance-none" title="快速選擇">
+                                        <option value="" disabled selected>▼</option>
+                                        <option value="HTML, Tailwind, JS, Google Gemini API">Vibe 標準 (HTML + Gemini)</option>
+                                        <option value="React, Tailwind, Lucide, Google Gemini API">React 單檔 (React + Gemini)</option>
+                                        <option value="Next.js, Tailwind, Google Gemini API">現代全端 (Next.js + Gemini)</option>
+                                        <option value="Python, Streamlit, Google Gemini API">Python AI App (Streamlit)</option>
+                                        <option value="HTML, Tailwind, Vanilla JS">純靜態網頁 (無 AI)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">
+                                設計風格 <span class="text-xs text-blue-500 font-normal">(可選)</span>
+                            </label>
+                            <div class="flex">
+                                <input type="text" id="designStyle" class="w-full p-2 border border-slate-300 border-r-0 rounded-l text-sm bg-white focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none" placeholder="輸入或右側選取...">
+                                <select onchange="document.getElementById('designStyle').value=this.value; this.selectedIndex=0;" class="bg-slate-100 border border-slate-300 rounded-r text-sm px-2 cursor-pointer hover:bg-slate-200 w-12 text-center appearance-none" title="快速選擇">
+                                    <option value="" disabled selected>▼</option>
+                                    <option value="Slate 藍灰色系 / 專業顧問感 / Grid 佈局">專業顧問 (Vibe 標準)</option>
+                                    <option value="Modern Clean / 黑白極簡 / 大間距">現代極簡 (SaaS 風格)</option>
+                                    <option value="Cyberpunk / 暗黑模式 / 霓虹點綴">科技前衛 (黑客風格)</option>
+                                    <option value="Warm / 暖色系 / 圓角活潑">溫馨活潑 (教育/親子)</option>
+                                    <option value="Corporate / 深藍 / 傳統佈局">企業穩重 (B2B)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">API Key 策略</label>
+                            <select id="apiKeyStrategy" class="w-full p-2 border border-slate-300 rounded text-sm bg-white cursor-pointer">
+                                <option value="使用者自行輸入 (Session/Local)">使用者自行輸入 (Session/Local)</option>
+                                <option value="後端 Proxy">後端 Proxy (不適用純前端)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <h3 class="text-sm font-bold text-blue-600 uppercase tracking-wider border-b border-blue-100 pb-1">5. 功能與 AI 設定</h3>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">功能需求列表 (條列式)</label>
+                            <textarea id="features" rows="4" class="w-full p-2 border border-slate-300 rounded text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none" placeholder="- 專案建立
+- 四層結構表單
+- AI 生成 Markdown
+- 匯出功能"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">
+                                AI 扮演角色 <span class="text-xs text-blue-500 font-normal">(決定語氣)</span>
+                            </label>
+                            <div class="flex">
+                                <input type="text" id="aiRole" class="w-full p-2 border border-slate-300 border-r-0 rounded-l text-sm bg-white focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none" placeholder="輸入或右側選取...">
+                                <select onchange="document.getElementById('aiRole').value=this.value; this.selectedIndex=0;" class="bg-slate-100 border border-slate-300 rounded-r text-sm px-2 cursor-pointer hover:bg-slate-200 w-12 text-center appearance-none" title="快速選擇">
+                                    <option value="" disabled selected>▼</option>
+                                    <option value="資深產品經理 + 解決方案架構師">標準 Vibe 顧問 (嚴謹、結構化)</option>
+                                    <option value="使用者體驗設計師 (UX Designer)">重視流程與體驗 (感性、易用性)</option>
+                                    <option value="資深全端工程師 (Tech Lead)">重視技術實作細節 (程式碼導向)</option>
+                                    <option value="敏捷教練 (Agile Coach)">重視 User Story 與驗收標準</option>
+                                    <option value="創意總監 (Creative Director)">重視視覺與創新亮點</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <h3 class="text-sm font-bold text-blue-600 uppercase tracking-wider border-b border-blue-100 pb-1">6. 品牌與創作者設定 <span class="text-xs font-normal text-slate-400">(生成後 App 的設定)</span></h3>
+                        <div class="grid grid-cols-2 gap-3">
+                             <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">App 顯示名稱</label>
+                                <input type="text" id="appDisplayTitle" class="w-full p-2 border border-slate-300 rounded text-sm" placeholder="例如：My Awesome Tool">
+                            </div>
+                            <div>
+                                 <label class="block text-sm font-medium text-slate-700 mb-1">Logo (URL/Icon)</label>
+                                 <input type="text" id="appLogo" class="w-full p-2 border border-slate-300 rounded text-sm" placeholder="路徑或 Emoji 🔮">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">版權宣言 (Footer)</label>
+                            <input type="text" id="copyrightText" class="w-full p-2 border border-slate-300 rounded text-sm" placeholder="例如：© 2026 Tony AI. All rights reserved.">
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                 <label class="block text-sm font-medium text-slate-700 mb-1">創作者名稱</label>
+                                 <input type="text" id="creatorName" class="w-full p-2 border border-slate-300 rounded text-sm" placeholder="例如：Tony 老師">
+                            </div>
+                            <div>
+                                 <label class="block text-sm font-medium text-slate-700 mb-1">創作者頭像 (URL)</label>
+                                 <input type="text" id="creatorAvatar" class="w-full p-2 border border-slate-300 rounded text-sm" placeholder="圖片連結">
+                            </div>
+                        </div>
+                        <div>
+                             <label class="block text-sm font-medium text-slate-700 mb-1">創作者簡介</label>
+                             <textarea id="creatorBio" rows="2" class="w-full p-2 border border-slate-300 rounded text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none" placeholder="例如：AI 導師，專注於生成式 AI 應用教學。"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-slate-200 bg-white/90 backdrop-blur-sm grid grid-cols-3 gap-2 shrink-0 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] pb-safe">
+                     <button onclick="healthCheck()" id="healthCheckBtn" class="col-span-1 bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-2 rounded shadow transition-colors flex justify-center items-center gap-1">
+                        <i class="fa-solid fa-stethoscope"></i> 
+                        <span>需求健檢</span>
+                    </button>
+                    <button onclick="generatePRD()" id="generateBtn" class="col-span-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded shadow transition-colors flex justify-center items-center gap-2">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> 
+                        <span>生成規格書</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right Panel: Preview -->
+            <div class="w-full md:w-2/3 h-1/2 md:h-full bg-slate-50 flex flex-col relative overflow-hidden">
+                <div class="p-4 bg-white border-b border-slate-200 flex justify-between items-center shadow-sm flex-wrap gap-2 shrink-0">
+                    <div class="flex items-center gap-4">
+                        <h2 class="font-bold text-slate-700" id="previewTitle"><i class="fa-solid fa-file-lines mr-2"></i>輸出預覽</h2>
+                        <span id="statusTag" class="hidden text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full font-medium">生成完成</span>
+                    </div>
+                    
+                    <div class="flex gap-2">
+                        <button onclick="copyVibePrompt()" title="複製給 AI 寫程式用的 Prompt" class="flex items-center gap-1 bg-purple-100 text-purple-700 hover:bg-purple-200 px-3 py-1.5 rounded text-sm border border-purple-200 transition-colors">
+                            <i class="fa-solid fa-robot"></i> 複製 Vibe Prompt
+                        </button>
+                        <div class="hidden sm:block h-6 w-px bg-slate-300 mx-1"></div>
+                        <button onclick="downloadJSON()" title="下載 JSON" class="text-slate-600 hover:bg-slate-100 px-3 py-1.5 rounded text-sm border border-slate-300 transition-colors">
+                            <i class="fa-solid fa-code"></i> JSON
+                        </button>
+                        <button onclick="downloadWord()" title="下載 Word" class="text-slate-600 hover:bg-slate-100 px-3 py-1.5 rounded text-sm border border-slate-300 transition-colors">
+                            <i class="fa-solid fa-file-word"></i> Word
+                        </button>
+                        <button onclick="downloadText()" title="下載純文字" class="text-slate-600 hover:bg-slate-100 px-3 py-1.5 rounded text-sm border border-slate-300 transition-colors">
+                            <i class="fa-solid fa-file-lines"></i> Txt
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex-1 overflow-y-auto p-4 md:p-8 relative bg-slate-50 pb-[max(env(safe-area-inset-bottom,2rem),2rem)]">
+                    <div id="loadingState" class="hidden absolute inset-0 bg-white/80 z-20 flex flex-col items-center justify-center">
+                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
+                        <p id="loadingText" class="text-slate-600 font-medium animate-pulse">AI 顧問正在撰寫規格書...</p>
+                        <p class="text-xs text-slate-400 mt-2">請稍候，這需要一點時間</p>
+                    </div>
+                    
+                    <div id="emptyState" class="flex flex-col items-center justify-center h-full text-slate-400 p-4">
+                        <div class="flex flex-wrap justify-center gap-4 mb-6">
+                            <div class="text-center">
+                                <div class="w-12 h-12 md:w-16 md:h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                                    <i class="fa-solid fa-sparkles text-xl md:text-2xl text-purple-500"></i>
+                                </div>
+                                <span class="text-xs md:text-sm">1. AI 幫我想</span>
+                            </div>
+                            <i class="fa-solid fa-arrow-right mt-4 md:mt-6 text-slate-300"></i>
+                            <div class="text-center">
+                                <div class="w-12 h-12 md:w-16 md:h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                                    <i class="fa-solid fa-stethoscope text-xl md:text-2xl text-amber-500"></i>
+                                </div>
+                                <span class="text-xs md:text-sm">2. 需求健檢</span>
+                            </div>
+                            <i class="fa-solid fa-arrow-right mt-4 md:mt-6 text-slate-300"></i>
+                            <div class="text-center">
+                                <div class="w-12 h-12 md:w-16 md:h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                                    <i class="fa-solid fa-file-code text-xl md:text-2xl text-blue-500"></i>
+                                </div>
+                                <span class="text-xs md:text-sm">3. 生成規格</span>
+                            </div>
+                        </div>
+                        <p class="text-sm md:text-base text-center">填寫左側表單，體驗完整的 Vibe Coding 流程</p>
+                    </div>
+
+                    <div id="previewContent" class="prose max-w-none hidden bg-white p-4 md:p-8 rounded-lg shadow-sm border border-slate-200 min-h-full"></div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="bg-slate-800 text-slate-400 text-xs text-center p-2 border-t border-slate-700 shrink-0 pb-safe">
+            © 2026 TONY STUDIO. 本教材由 TONY STUDIO 楊文澤顧問設計. All Rights Reserved.
+        </footer>
+    </div>
+
+    <!-- ==================== ADMIN DASHBOARD ==================== -->
+    <div id="admin-dashboard" class="hidden absolute inset-0 z-20 flex flex-col overflow-hidden bg-slate-50">
+        <header class="bg-purple-800 text-white pt-16 px-4 pb-4 shadow-md flex justify-between items-center shrink-0">
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-user-shield text-2xl"></i>
+                <h1 class="text-lg font-bold">系統管理後台</h1>
+            </div>
+            <div class="flex items-center gap-3">
+                <button onclick="exportCSV()" class="text-sm bg-green-600 hover:bg-green-500 text-white px-3 py-1.5 rounded transition-colors flex items-center gap-2 border border-green-500 shadow-sm">
+                    <i class="fa-solid fa-file-csv"></i> 匯出 CSV
+                </button>
+                <div class="h-6 w-px bg-purple-600 mx-1"></div>
+                <button onclick="switchSystemView('main')" class="text-sm bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded transition-colors flex items-center gap-2 border border-slate-600 shadow-sm">
+                    <i class="fa-solid fa-arrow-left"></i> 返回主程式
+                </button>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-6 bg-slate-100">
+            <div class="bg-white rounded-lg shadow border border-slate-200 overflow-hidden max-w-6xl mx-auto">
+                <div class="p-4 border-b border-slate-200 bg-slate-50">
+                    <h2 class="font-bold text-slate-700">會員資料管理</h2>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-600 text-sm border-b border-slate-200">
+                                <th class="p-3 font-semibold">電子信箱</th>
+                                <th class="p-3 font-semibold">真實姓名</th>
+                                <th class="p-3 font-semibold">身分</th>
+                                <th class="p-3 font-semibold">註冊時間</th>
+                                <th class="p-3 font-semibold text-center">登入次數</th>
+                                <th class="p-3 font-semibold text-center">權限</th>
+                                <th class="p-3 font-semibold text-center">管理操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-users-tbody">
+                            <tr><td colspan="7" class="p-8 text-center text-slate-400">載入資料中...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MODALS ==================== -->
+    <div id="aboutModal" class="hidden fixed inset-0 z-[60] flex items-center justify-center bg-black/50 backdrop-blur-sm transition-opacity duration-300">
+        <div class="bg-white rounded-lg shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto transform transition-transform duration-300 scale-95" id="aboutModalContent">
+            <div class="relative h-32 bg-gradient-to-r from-blue-600 to-purple-600 rounded-t-lg">
+                <button onclick="toggleAboutModal()" class="absolute top-4 right-4 text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-full p-1 w-8 h-8 flex items-center justify-center transition-colors">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            
+            <div class="px-8 pb-8 -mt-16 relative z-10">
+                <div class="flex flex-col items-center mb-6">
+                    <img src="https://i.postimg.cc/Gh8Zt7SX/S_56844323.jpg" alt="Tony Advisor" class="w-32 h-32 rounded-full border-4 border-white shadow-lg mb-4 object-cover">
+                    <h2 class="text-2xl font-bold text-slate-800">TONY 楊文澤</h2>
+                    <p class="text-blue-600 font-medium">資深數位行銷科技顧問 | 生成式 AI 創作者 | 創業導師</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-slate-600 mb-6">
+                    <div>
+                        <h3 class="font-bold text-slate-800 border-b border-slate-200 pb-2 mb-3"><i class="fa-solid fa-briefcase mr-2 text-blue-500"></i>現職 Current</h3>
+                        <ul class="space-y-1">
+                            <li>▪ 龍華科大 數位行銷講師</li>
+                            <li>▪ 智策慧 品牌行銷科技顧問</li>
+                        </ul>
+                    </div>
+                    <div>
+                         <h3 class="font-bold text-slate-800 border-b border-slate-200 pb-2 mb-3"><i class="fa-solid fa-graduation-cap mr-2 text-blue-500"></i>學歷 Education</h3>
+                         <ul class="space-y-1">
+                            <li>▪ 台大 EMBA 商學組</li>
+                            <li>▪ 美國 Arizona State University 互動多媒體設計</li>
+                            <li>▪ 北科大 工業設計</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="text-sm text-slate-600 mb-6">
+                    <h3 class="font-bold text-slate-800 border-b border-slate-200 pb-2 mb-3"><i class="fa-solid fa-building-user mr-2 text-blue-500"></i>經歷 Experience</h3>
+                    <ul class="space-y-1">
+                        <li>▪ 脈動心聯股份有限公司 創辦人暨執行長</li>
+                        <li>▪ 宏碁集團建碁 AOPEN 整合營銷處處長 / 全球品牌行銷總監 / 企業發言人</li>
+                        <li>▪ 台灣數位看板多媒體聯盟 (DSMA) 副會長</li>
+                    </ul>
+                </div>
+
+                <div class="text-sm text-slate-600">
+                    <h3 class="font-bold text-slate-800 border-b border-slate-200 pb-2 mb-3"><i class="fa-solid fa-chalkboard-user mr-2 text-blue-500"></i>專家授課經歷</h3>
+                    <ul class="space-y-1">
+                        <li>▪ CPC 生產力中心 經營管理顧問師班 / 中小企業成長創價能量 講師</li>
+                        <li>▪ 台大 EMBA / 長榮 EMBA / 北科大 / 政大 / 世新 業師</li>
+                        <li>▪ 2021 MarTech 行銷科技行銷長認證班 講師</li>
+                        <li>▪ 2021/2024/2025 T大使與產業尖兵 講師</li>
+                        <li>▪ 2025 新光人壽 AI 工具應用 企業內訓講師</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="bg-slate-50 p-4 border-t border-slate-100 flex justify-center pb-safe">
+                 <button onclick="toggleAboutModal()" class="px-6 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded font-medium transition-colors">關閉</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- History Modal -->
+    <div id="historyModal" class="hidden fixed inset-0 z-[60] flex items-center justify-center bg-black/50 backdrop-blur-sm transition-opacity duration-300">
+        <div class="bg-white rounded-lg shadow-2xl w-full max-w-lg max-h-[85vh] flex flex-col transform transition-transform duration-300 scale-95" id="historyModalContent">
+            <div class="flex justify-between items-center p-4 border-b border-slate-200 shrink-0">
+                <h3 class="text-lg font-bold text-slate-800"><i class="fa-solid fa-clock-rotate-left mr-2 text-blue-600"></i>歷史紀錄</h3>
+                <button onclick="toggleHistoryModal()" class="text-slate-400 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-full w-8 h-8 flex items-center justify-center transition-colors">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="flex-1 overflow-y-auto p-4 space-y-3" id="historyList">
+                <div class="text-center text-slate-400 py-8">載入中...</div>
+            </div>
+            <div class="bg-slate-50 p-3 border-t border-slate-100 text-xs text-center text-slate-500 shrink-0">
+                自動同步至您的 Firebase 雲端資料庫
+            </div>
+        </div>
+    </div>
+
+    <!-- Alerts -->
+    <div id="customAlert" class="hidden fixed inset-0 z-[70] flex items-center justify-center bg-black/50 backdrop-blur-sm transition-opacity duration-300">
+        <div class="bg-white rounded-lg shadow-2xl w-full max-w-sm p-6 transform transition-transform duration-300 scale-95 text-center">
+            <i id="alertIcon" class="fa-solid fa-circle-info text-3xl mb-3 text-blue-500"></i>
+            <h3 id="alertTitle" class="text-lg font-bold text-slate-800 mb-2">提示</h3>
+            <p id="alertMessage" class="text-sm text-slate-600 mb-6 whitespace-pre-wrap"></p>
+            <button onclick="closeAlert()" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded font-medium transition-colors w-full shadow-sm">確定</button>
+        </div>
+    </div>
+
+    <div id="customConfirm" class="hidden fixed inset-0 z-[70] flex items-center justify-center bg-black/50 backdrop-blur-sm transition-opacity duration-300">
+        <div class="bg-white rounded-lg shadow-2xl w-full max-w-sm p-6 transform transition-transform duration-300 scale-95 text-center">
+            <i class="fa-solid fa-circle-question text-3xl mb-3 text-amber-500"></i>
+            <h3 id="confirmTitle" class="text-lg font-bold text-slate-800 mb-2">確認</h3>
+            <p id="confirmMessage" class="text-sm text-slate-600 mb-6 whitespace-pre-wrap"></p>
+            <div class="flex gap-3 justify-center">
+                <button onclick="closeConfirm(false)" class="flex-1 px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded font-medium transition-colors">取消</button>
+                <button onclick="closeConfirm(true)" class="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded font-medium transition-colors shadow-sm">確定</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== FIREBASE LOGIC ==================== -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendEmailVerification, sendPasswordResetEmail, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, updateDoc, deleteDoc, onSnapshot, collection, getDocs, increment } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyB8CQ5YXid9SaVdydkoMuSrQSghPI6pAxU",
+            authDomain: "e22-vibe-coding-specgeneration.firebaseapp.com",
+            projectId: "e22-vibe-coding-specgeneration",
+            storageBucket: "e22-vibe-coding-specgeneration.firebasestorage.app",
+            messagingSenderId: "825753282056",
+            appId: "1:825753282056:web:ae1296031b11a4ec8f93bd",
+            measurementId: "G-ZH9E4DG8XX"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const systemAppId = 'vibe-prd-builder';
+
+        window.isStorageReady = false;
+        window.historyRecords = [];
+        window.currentUserProfile = null;
+        window.isRegistering = false; // Fix Race Condition during Register -> setDoc
+        let adminUnsubscribe = null;
+        window.historyUnsubscribe = null;
+
+        window.switchSystemView = function(view) {
+            ['auth-gate', 'main-app', 'admin-dashboard'].forEach(id => document.getElementById(id).classList.add('hidden'));
+            if (view === 'auth') document.getElementById('auth-gate').classList.remove('hidden');
+            if (view === 'main') document.getElementById('main-app').classList.remove('hidden');
+            if (view === 'admin') {
+                document.getElementById('admin-dashboard').classList.remove('hidden');
+                loadAdminUsers();
+            }
+        };
+
+        window.switchAuthView = function(view) {
+            ['login-form-container', 'register-form-container', 'forgot-form-container'].forEach(id => document.getElementById(id).classList.add('hidden'));
+            document.getElementById(`${view}-form-container`).classList.remove('hidden');
+        };
+
+        window.togglePasswordVisibility = function(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            if (input.type === "password") {
+                input.type = "text";
+                icon.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                input.type = "password";
+                icon.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        };
+
+        const showAlert = (title, msg, type) => { if(window.uiAlert) window.uiAlert(title, msg, type); else alert(msg); };
+
+        onAuthStateChanged(auth, async (user) => {
+            // FIX: If currently registering, skip this listener to avoid immediate signout preventing DB writes.
+            if (window.isRegistering) return; 
+
+            if (user) {
+                if (!user.emailVerified) {
+                    await signOut(auth);
+                    showAlert('登入失敗', 'Email 尚未驗證，請前往您的信箱點擊驗證連結。\n若未收到請檢查垃圾郵件匣。', 'error');
+                    window.switchSystemView('auth');
+                    return;
+                }
+
+                try {
+                    const profileRef = doc(db, 'artifacts', systemAppId, 'public', 'data', 'userProfiles', user.uid);
+                    const snap = await getDoc(profileRef);
+                    let profile = snap.exists() ? snap.data() : null;
+
+                    if (!profile) {
+                        await signOut(auth);
+                        showAlert('錯誤', '找不到會員資料，請重新註冊或聯繫管理員。', 'error');
+                        return;
+                    }
+
+                    if (user.email === 'mindnodeai@gmail.com' && profile.role !== 'admin') {
+                        await updateDoc(profileRef, { role: 'admin' });
+                        profile.role = 'admin';
+                    }
+
+                    await updateDoc(profileRef, { loginCount: increment(1), lastLoginAt: Date.now() });
+
+                    window.currentUserProfile = profile;
+                    window.currentUser = user; 
+                    window.isStorageReady = true;
+
+                    document.getElementById('header-user-welcome').innerText = `你好, ${profile.realName} (${profile.identity})`;
+                    if (profile.role === 'admin') document.getElementById('admin-btn-container').classList.remove('hidden');
+                    else document.getElementById('admin-btn-container').classList.add('hidden');
+
+                    loadCloudHistory();
+                    window.switchSystemView('main');
+                } catch (e) {
+                    console.error("Profile load error", e);
+                    if (e.message && e.message.includes("permission")) {
+                         window.uiAlert('Firebase 權限阻擋', '請前往 Firebase Console -> Firestore Database -> Rules。\n將規則改為：\nallow read, write: if request.auth != null;\n\n發布後請重新整理網頁。', 'error');
+                    } else {
+                         window.uiAlert('系統錯誤', '讀取權限失敗：' + e.message, 'error');
+                    }
+                }
+            } else {
+                window.currentUser = null;
+                window.currentUserProfile = null;
+                window.isStorageReady = false;
+                if(adminUnsubscribe) { adminUnsubscribe(); adminUnsubscribe = null; }
+                if(window.historyUnsubscribe) { window.historyUnsubscribe(); window.historyUnsubscribe = null; }
+                window.switchSystemView('auth');
+            }
+        });
+
+        document.getElementById('btn-register').addEventListener('click', async () => {
+            const email = document.getElementById('reg-email').value.trim();
+            const password = document.getElementById('reg-password').value;
+            const realName = document.getElementById('reg-name').value.trim();
+            const identity = document.getElementById('reg-identity').value;
+
+            if(!email || !password || !realName) return showAlert('欄位不完整', '請填寫真實姓名、Email與密碼。', 'error');
+
+            const btn = document.getElementById('btn-register');
+            const ogText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 處理中...';
+            btn.disabled = true;
+            window.isRegistering = true; // Lock the observer
+
+            try {
+                const userCred = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCred.user;
+                await sendEmailVerification(user);
+
+                const role = (email === 'mindnodeai@gmail.com') ? 'admin' : 'user';
+                await setDoc(doc(db, 'artifacts', systemAppId, 'public', 'data', 'userProfiles', user.uid), {
+                    email, realName, identity, role, createdAt: Date.now(), loginCount: 0
+                });
+
+                await signOut(auth); // Manual SignOut after safe operations
+                window.switchAuthView('login');
+                document.getElementById('login-email').value = email;
+                showAlert('註冊成功', '請至信箱點擊驗證信，再進行登入。\n\n溫馨提醒：驗證信有時會跑到「垃圾郵件匣」，請記得前往確認唷！', 'success');
+            } catch (err) {
+                console.error(err);
+                showAlert('註冊失敗', err.message, 'error');
+            } finally {
+                window.isRegistering = false; // Unlock observer
+                btn.innerHTML = ogText;
+                btn.disabled = false;
+            }
+        });
+
+        document.getElementById('btn-login').addEventListener('click', async () => {
+            const email = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-password').value;
+            if(!email || !password) return showAlert('提示', '請輸入信箱與密碼', 'error');
+            const btn = document.getElementById('btn-login');
+            const ogText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 登入中...';
+            btn.disabled = true;
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+            } catch (err) {
+                console.error(err);
+                showAlert('登入失敗', '帳號或密碼錯誤，請重試。', 'error');
+            } finally {
+                btn.innerHTML = ogText;
+                btn.disabled = false;
+            }
+        });
+
+        window.handleLogout = async () => {
+            window.uiConfirm('登出', '確定要登出系統嗎？', async () => {
+                try {
+                    // 登出前先手動斷開即時連線，避免觸發權限錯誤
+                    if(window.historyUnsubscribe) { window.historyUnsubscribe(); window.historyUnsubscribe = null; }
+                    if(adminUnsubscribe) { adminUnsubscribe(); adminUnsubscribe = null; }
+                    await signOut(auth);
+                } catch (err) {
+                    console.error("登出失敗", err);
+                    window.uiAlert('錯誤', '登出失敗，請重試。', 'error');
+                }
+            });
+        };
+
+        document.getElementById('btn-forgot').addEventListener('click', async () => {
+            const email = document.getElementById('forgot-email').value.trim();
+            if(!email) return showAlert('提示', '請輸入您的信箱', 'error');
+            try {
+                await sendPasswordResetEmail(auth, email);
+                window.switchAuthView('login');
+                showAlert('已發送', '重設密碼信件已發送。\n\n溫馨提醒：確認信有時會跑到「垃圾郵件匣」，請記得前往確認唷！', 'success');
+            } catch (err) { showAlert('發送失敗', err.message, 'error'); }
+        });
+
+        function loadAdminUsers() {
+            if (window.currentUserProfile?.role !== 'admin') return;
+            const usersRef = collection(db, 'artifacts', systemAppId, 'public', 'data', 'userProfiles');
+            if (adminUnsubscribe) adminUnsubscribe();
+
+            adminUnsubscribe = onSnapshot(usersRef, (snapshot) => {
+                const tbody = document.getElementById('admin-users-tbody');
+                let rows = '';
+                const users = [];
+                snapshot.forEach(d => users.push({uid: d.id, ...d.data()}));
+                users.sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+                users.forEach(data => {
+                    const isSuperAdmin = data.email === 'mindnodeai@gmail.com';
+                    const dateStr = data.createdAt ? new Date(data.createdAt).toLocaleString('zh-TW', {
+                        year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'
+                    }) : 'N/A';
+                    
+                    const roleBadge = data.role === 'admin' 
+                        ? '<span class="bg-purple-100 text-purple-700 px-2 py-1 rounded-full text-xs font-bold border border-purple-200">Admin</span>' 
+                        : '<span class="bg-slate-100 text-slate-700 px-2 py-1 rounded-full text-xs font-medium border border-slate-200">User</span>';
+
+                    let actionBtns = '';
+                    if (isSuperAdmin) {
+                        actionBtns = '<span class="text-xs text-amber-600 font-bold bg-amber-50 px-2 py-1 rounded border border-amber-200"><i class="fa-solid fa-crown mr-1"></i>系統創作者</span>';
+                    } else {
+                        const toggleRoleStr = data.role === 'admin' ? '降為 User' : '升為 Admin';
+                        const toggleColor = data.role === 'admin' ? 'text-slate-600 hover:bg-slate-200' : 'text-blue-600 hover:bg-blue-100';
+                        actionBtns = `
+                            <button onclick="window.adminToggleRole('${data.uid}', '${data.role}', '${data.email}')" class="text-xs bg-slate-100 ${toggleColor} px-2 py-1.5 rounded mr-2 font-medium shadow-sm transition-colors border border-slate-200">${toggleRoleStr}</button>
+                            <button onclick="window.adminDeleteUser('${data.uid}', '${data.email}')" class="text-xs bg-red-50 text-red-600 hover:bg-red-100 px-2 py-1.5 rounded font-medium shadow-sm transition-colors border border-red-200">刪除帳號</button>
+                        `;
+                    }
+
+                    rows += `
+                        <tr class="border-b border-slate-200 hover:bg-slate-50 transition-colors">
+                            <td class="p-3 text-sm text-slate-700 font-medium">${data.email}</td>
+                            <td class="p-3 text-sm text-slate-600">${data.realName}</td>
+                            <td class="p-3 text-sm text-slate-500">${data.identity}</td>
+                            <td class="p-3 text-sm text-slate-500">${dateStr}</td>
+                            <td class="p-3 text-sm text-center font-mono text-slate-600">${data.loginCount || 0}</td>
+                            <td class="p-3 text-sm text-center">${roleBadge}</td>
+                            <td class="p-3 text-sm text-center whitespace-nowrap">${actionBtns}</td>
+                        </tr>
+                    `;
+                });
+                tbody.innerHTML = rows;
+            }, (error) => {
+                console.error("Admin load error", error);
+                if (error.message && error.message.includes("permission")) {
+                     showAlert("權限阻擋", "無法載入會員名單，請確認 Firestore 安全規則已開放權限 (request.auth != null)。", "error");
+                } else {
+                     showAlert("讀取錯誤", "無法載入會員名單：" + error.message, "error");
+                }
+            });
+        }
+
+        window.adminToggleRole = async (uid, currentRole, targetEmail) => {
+            if(targetEmail === 'mindnodeai@gmail.com') return showAlert('拒絕', '不能修改創作者權限', 'error');
+            const newRole = currentRole === 'admin' ? 'user' : 'admin';
+            window.uiConfirm('更改權限', `確定要將 ${targetEmail} 的權限更改為 ${newRole.toUpperCase()} 嗎？`, async () => {
+                try { await updateDoc(doc(db, 'artifacts', systemAppId, 'public', 'data', 'userProfiles', uid), { role: newRole }); } 
+                catch (e) { showAlert('錯誤', e.message, 'error'); }
+            });
+        };
+
+        window.adminDeleteUser = async (uid, targetEmail) => {
+            if(targetEmail === 'mindnodeai@gmail.com') return showAlert('拒絕', '不能刪除創作者帳號', 'error');
+            window.uiConfirm('刪除帳號', `確定要刪除 ${targetEmail} 的資料嗎？\n此操作將永久撤銷其登入權限。`, async () => {
+                try { await deleteDoc(doc(db, 'artifacts', systemAppId, 'public', 'data', 'userProfiles', uid)); } 
+                catch (e) { showAlert('錯誤', e.message, 'error'); }
+            });
+        };
+
+        window.exportCSV = async () => {
+            try {
+                const usersRef = collection(db, 'artifacts', systemAppId, 'public', 'data', 'userProfiles');
+                const snapshot = await getDocs(usersRef);
+                let csvContent = "\uFEFF信箱,真實姓名,身分,註冊時間,登入次數,權限\n";
+                
+                snapshot.forEach(docSnap => {
+                    const data = docSnap.data();
+                    const dateStr = data.createdAt ? new Date(data.createdAt).toLocaleString('zh-TW').replace(/,/g, '') : 'N/A'; 
+                    csvContent += `${data.email},${data.realName},${data.identity},${dateStr},${data.loginCount || 0},${data.role}\n`;
+                });
+                
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = `Vibe_Users_${new Date().toISOString().split('T')[0]}.csv`;
+                document.body.appendChild(a); a.click(); document.body.removeChild(a);
+            } catch (error) { showAlert('匯出失敗', error.message, 'error'); }
+        };
+
+        function loadCloudHistory() {
+            if (!window.currentUser) return;
+            
+            // 如果已經有監聽器存在，先將其關閉避免重複疊加
+            if (window.historyUnsubscribe) {
+                window.historyUnsubscribe();
+            }
+
+            const colRef = collection(db, 'artifacts', systemAppId, 'users', window.currentUser.uid, 'history');
+            window.historyUnsubscribe = onSnapshot(colRef, (snapshot) => {
+                window.historyRecords = [];
+                snapshot.forEach(d => window.historyRecords.push(d.data()));
+                window.historyRecords.sort((a, b) => b.timestamp - a.timestamp);
+                if (window.renderHistoryUI) window.renderHistoryUI();
+            }, (error) => {
+                console.error("Cloud load failed", error);
+                const list = document.getElementById('historyList');
+                if (list) {
+                    list.innerHTML = `<div class="text-center text-red-400 py-8 text-sm"><i class="fa-solid fa-triangle-exclamation mb-2 text-2xl"></i><br>讀取雲端紀錄失敗 (權限不足)<br><br>請至 Firebase Console -> Firestore Database -> Rules<br>修改規則為允許讀寫 (request.auth != null)</div>`;
+                }
+            });
+        }
+
+        window.saveRecord = async function(type, formData, resultText) {
+            if (!window.isStorageReady || !window.currentUser) return;
+            const record = {
+                id: Date.now().toString(),
+                type: type,
+                title: formData.projectName || (type === 'prd' ? '未命名規格書' : '未命名健檢'),
+                timestamp: Date.now(),
+                formData: formData,
+                resultText: resultText
+            };
+            try {
+                const docRef = doc(db, 'artifacts', systemAppId, 'users', window.currentUser.uid, 'history', record.id);
+                await setDoc(docRef, record);
+            } catch (e) { 
+                console.error("Cloud save failed", e); 
+                showAlert('雲端同步失敗', '歷史紀錄無法儲存至資料庫。請確認 Firebase Firestore 安全規則。', 'error');
+            }
+        };
+
+        window.deleteRecordAction = async function(id) {
+            if (window.isStorageReady && window.currentUser) {
+                try {
+                    const docRef = doc(db, 'artifacts', systemAppId, 'users', window.currentUser.uid, 'history', id);
+                    await deleteDoc(docRef);
+                    showAlert('刪除成功', '該筆紀錄已從雲端刪除。', 'success');
+                } catch (e) { 
+                    console.error("Cloud delete failed", e); 
+                    showAlert('刪除失敗', '權限不足或網路異常，請確認 Firestore 安全規則。', 'error');
+                }
+            }
+        };
+    </script>
+
+    <!-- ==================== UI & APP LOGIC ==================== -->
+    <script>
+        window.uiAlert = function(title, message, type = 'info') {
+            const modal = document.getElementById('customAlert');
+            document.getElementById('alertTitle').innerText = title;
+            document.getElementById('alertMessage').innerText = message;
+            const iconObj = document.getElementById('alertIcon');
+            iconObj.className = 'fa-solid text-3xl mb-3 ';
+            if(type === 'error') iconObj.classList.add('fa-circle-exclamation', 'text-red-500');
+            else if(type === 'success') iconObj.classList.add('fa-circle-check', 'text-green-500');
+            else iconObj.classList.add('fa-circle-info', 'text-blue-500');
+            modal.classList.remove('hidden');
+            setTimeout(() => modal.querySelector('div').classList.replace('scale-95', 'scale-100'), 10);
+        }
+
+        function closeAlert() {
+            const modal = document.getElementById('customAlert');
+            modal.querySelector('div').classList.replace('scale-100', 'scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 200);
+        }
+
+        let confirmCallback = null;
+        window.uiConfirm = function(title, message, callback) {
+            const modal = document.getElementById('customConfirm');
+            document.getElementById('confirmTitle').innerText = title;
+            document.getElementById('confirmMessage').innerText = message;
+            confirmCallback = callback;
+            modal.classList.remove('hidden');
+            setTimeout(() => modal.querySelector('div').classList.replace('scale-95', 'scale-100'), 10);
+        }
+
+        function closeConfirm(isConfirmed) {
+            const modal = document.getElementById('customConfirm');
+            modal.querySelector('div').classList.replace('scale-100', 'scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                if(isConfirmed && confirmCallback) confirmCallback();
+                confirmCallback = null;
+            }, 200);
+        }
+
+        function getApiUrl(apiKey) {
+            // 全面升級為 Gemini 3.5 Flash 正式版模型
+            return "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent";
+        }
+        
+        const fields = [
+            'projectName', 'oneLiner', 'background', 'targetUser', 'exclusions', 'successMetrics', 
+            'devType', 'techStack', 'designStyle', 'apiKeyStrategy', 'features', 'aiRole',
+            'appDisplayTitle', 'appLogo', 'copyrightText', 'creatorName', 'creatorAvatar', 'creatorBio'
+        ];
+        let generatedText = ""; let generatedData = {};
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadFromLocalStorage();
+            fields.forEach(id => {
+                const el = document.getElementById(id);
+                if(el) el.addEventListener('input', () => saveToLocalStorage());
+            });
+
+            const apiKeyInput = document.getElementById('apiKey');
+            const saveKeyCheck = document.getElementById('saveApiKey');
+            apiKeyInput.addEventListener('input', () => { if (saveKeyCheck.checked) localStorage.setItem('vibe_api_key', apiKeyInput.value); });
+            saveKeyCheck.addEventListener('change', () => {
+                if (saveKeyCheck.checked) localStorage.setItem('vibe_api_key', apiKeyInput.value);
+                else localStorage.removeItem('vibe_api_key');
+            });
+            const savedKey = localStorage.getItem('vibe_api_key');
+            if (savedKey) { apiKeyInput.value = savedKey; saveKeyCheck.checked = true; }
+        });
+
+        window.renderHistoryUI = function() {
+            const list = document.getElementById('historyList');
+            if (!list) return;
+            if (!window.historyRecords || window.historyRecords.length === 0) {
+                list.innerHTML = '<div class="text-center text-slate-400 py-8">尚無歷史紀錄</div>'; return;
+            }
+            list.innerHTML = window.historyRecords.map(record => {
+                const date = new Date(record.timestamp).toLocaleString('zh-TW', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
+                const icon = record.type === 'prd' ? '<i class="fa-solid fa-file-code text-blue-500"></i>' : '<i class="fa-solid fa-stethoscope text-amber-500"></i>';
+                const typeLabel = record.type === 'prd' ? '規格書' : '健檢';
+                return `
+                    <div class="flex items-center justify-between p-3 bg-slate-50 border border-slate-200 rounded hover:bg-slate-100 transition-colors">
+                        <div class="flex items-center gap-3 overflow-hidden">
+                            <div class="w-8 h-8 rounded bg-white shadow-sm flex items-center justify-center shrink-0">${icon}</div>
+                            <div class="truncate">
+                                <div class="font-medium text-slate-700 truncate text-sm">${record.title}</div>
+                                <div class="text-xs text-slate-500">${typeLabel} • ${date}</div>
+                            </div>
+                        </div>
+                        <div class="flex gap-2 shrink-0 ml-2">
+                            <button onclick="viewHistoryRecord('${record.id}')" class="px-3 py-1 bg-white border border-slate-300 text-slate-600 rounded hover:bg-blue-50 hover:text-blue-600 transition-colors text-xs font-medium shadow-sm">讀取</button>
+                            <button onclick="deleteHistoryRecord('${record.id}')" class="px-2 py-1 bg-white border border-slate-300 text-slate-400 rounded hover:bg-red-50 hover:text-red-600 transition-colors text-xs font-medium shadow-sm"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        };
+
+        function toggleHistoryModal() {
+            const modal = document.getElementById('historyModal');
+            const content = document.getElementById('historyModalContent');
+            if (modal.classList.contains('hidden')) {
+                if (window.renderHistoryUI) window.renderHistoryUI();
+                modal.classList.remove('hidden');
+                setTimeout(() => content.classList.replace('scale-95', 'scale-100'), 10);
+            } else {
+                content.classList.replace('scale-100', 'scale-95');
+                setTimeout(() => modal.classList.add('hidden'), 200);
+            }
+        }
+
+        function viewHistoryRecord(id) {
+            const record = window.historyRecords.find(r => r.id === id);
+            if (!record) return;
+            fields.forEach(fieldId => { const el = document.getElementById(fieldId); if (el && record.formData[fieldId] !== undefined) el.value = record.formData[fieldId]; });
+            saveToLocalStorage();
+            generatedText = record.resultText; generatedData = record.formData;
+            document.getElementById('emptyState').classList.add('hidden');
+            document.getElementById('loadingState').classList.add('hidden');
+            document.getElementById('previewContent').innerHTML = marked.parse(generatedText);
+            document.getElementById('previewContent').classList.remove('hidden');
+            document.getElementById('previewTitle').innerHTML = record.type === 'prd' ? '<i class="fa-solid fa-file-lines mr-2"></i>輸出預覽 <span class="text-xs font-normal text-slate-400">(讀取自紀錄)</span>' : '<i class="fa-solid fa-user-doctor mr-2"></i>健檢報告 <span class="text-xs font-normal text-slate-400">(讀取自紀錄)</span>';
+            const tag = document.getElementById('statusTag');
+            tag.innerHTML = record.type === 'prd' ? '規格書' : '健檢報告';
+            tag.className = 'text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full font-medium';
+            tag.classList.remove('hidden');
+            toggleHistoryModal();
+            window.uiAlert("讀取成功", "已成功將歷史紀錄載入到表單與預覽區。", "success");
+        }
+
+        function deleteHistoryRecord(id) {
+            window.uiConfirm("刪除紀錄", "確定要刪除這筆歷史紀錄嗎？此動作無法復原。", () => { if (window.deleteRecordAction) window.deleteRecordAction(id); });
+        }
+
+        function toggleApiKeyVisibility(inputId, iconId) {
+            const input = document.getElementById(inputId); const icon = document.getElementById(iconId);
+            if (input.type === "password") { input.type = "text"; icon.classList.remove('fa-eye'); icon.classList.add('fa-eye-slash'); } 
+            else { input.type = "password"; icon.classList.remove('fa-eye-slash'); icon.classList.add('fa-eye'); }
+        }
+
+        function toggleAboutModal() {
+            const modal = document.getElementById('aboutModal');
+            if (modal.classList.contains('hidden')) { modal.classList.remove('hidden'); setTimeout(() => { modal.querySelector('div').classList.replace('scale-95', 'scale-100'); }, 10); } 
+            else { modal.querySelector('div').classList.replace('scale-100', 'scale-95'); setTimeout(() => modal.classList.add('hidden'), 200); }
+        }
+
+        document.getElementById('aboutModal').addEventListener('click', function(e) { if (e.target === this) toggleAboutModal(); });
+        document.getElementById('historyModal').addEventListener('click', function(e) { if (e.target === this) toggleHistoryModal(); });
+
+        function saveToLocalStorage() {
+            const data = {}; fields.forEach(id => { const el = document.getElementById(id); if(el) data[id] = el.value; });
+            localStorage.setItem('vibe_prd_draft_v2', JSON.stringify(data));
+        }
+
+        function loadFromLocalStorage() {
+            const saved = localStorage.getItem('vibe_prd_draft_v2');
+            if (saved) { const data = JSON.parse(saved); fields.forEach(id => { if (document.getElementById(id) && data[id]) document.getElementById(id).value = data[id]; }); }
+        }
+
+        function clearForm() {
+            window.uiConfirm('清空表單', '確定要清空所有欄位嗎？這將無法復原。', () => {
+                fields.forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; if(id === 'devType' && el) el.value = '純前端/瀏覽器儲存'; });
+                localStorage.removeItem('vibe_prd_draft_v2');
+            });
+        }
+        function getApiKey() { return document.getElementById('apiKey').value.trim(); }
+
+        async function autoFillForm() {
+            const apiKey = getApiKey(); const apiUrl = getApiUrl(apiKey);
+            const projectName = document.getElementById('projectName').value; const oneLiner = document.getElementById('oneLiner').value;
+            if(!projectName && !oneLiner) return window.uiAlert('提示', '請至少填寫「專案名稱」或「一句話描述」，AI 才能幫您發想！', 'error');
+            const btn = document.querySelector('button[onclick="autoFillForm()"]'); const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> 發想中...'; btn.disabled = true;
+
+            const prompt = `你是一位資深產品經理。使用者想做一個名為 "${projectName}" 的專案，描述為 "${oneLiner}"。
+            請根據這有限的資訊推導欄位內容。回傳純 JSON 格式，不要有 markdown：
+            {"background": "問題背景與痛點(繁中)", "targetUser": "目標使用者", "exclusions": "不做什麼", "successMetrics": "成功標準", "features": "功能需求列表(條列式)", "techStack": "建議技術堆疊", "designStyle": "建議設計風格", "aiRole": "AI 扮演角色"}`;
+
+            try {
+                const response = await fetch(`${apiUrl}?key=${apiKey}`, {
+                    method: 'POST', headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], generationConfig: { responseMimeType: "application/json" } })
+                });
+                if (!response.ok) throw new Error(`API Error: ${response.status}`);
+                const result = await response.json(); const aiData = JSON.parse(result.candidates[0].content.parts[0].text);
+                const fillIfEmpty = (id, value) => { const el = document.getElementById(id); if(el && !el.value && value) el.value = value; };
+                fillIfEmpty('background', aiData.background); fillIfEmpty('targetUser', aiData.targetUser); fillIfEmpty('exclusions', aiData.exclusions);
+                fillIfEmpty('successMetrics', aiData.successMetrics); fillIfEmpty('features', aiData.features); fillIfEmpty('techStack', aiData.techStack);
+                fillIfEmpty('designStyle', aiData.designStyle); fillIfEmpty('aiRole', aiData.aiRole); fillIfEmpty('appDisplayTitle', projectName);
+                saveToLocalStorage(); window.uiAlert('發想成功', '✨ AI 已幫您填入建議內容！請檢查並微調。', 'success');
+            } catch (error) { let msg = error.message; if (!apiKey && (msg.includes('403') || msg.includes('400'))) msg += " (請輸入 API Key)"; window.uiAlert('發想失敗', msg, 'error'); } 
+            finally { btn.innerHTML = originalText; btn.disabled = false; }
+        }
+
+        async function healthCheck() {
+            const apiKey = getApiKey(); const apiUrl = getApiUrl(apiKey);
+            const btn = document.getElementById('healthCheckBtn'); const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 診斷中'; btn.disabled = true;
+            document.getElementById('loadingText').innerText = 'AI 醫師正在診斷需求...'; document.getElementById('loadingState').classList.remove('hidden');
+            document.getElementById('emptyState').classList.add('hidden'); document.getElementById('previewContent').classList.add('hidden');
+
+            const data = {}; fields.forEach(id => { const el = document.getElementById(id); if(el) data[id] = el.value; });
+            const prompt = `你現在是 Vibe Coding 的需求審查顧問。請分析以下使用者輸入的需求草稿進行「需求健檢」。\n專案: ${data.projectName} (${data.oneLiner})\n背景: ${data.background}\n功能: ${data.features}\n技術: ${data.techStack}\n請輸出一段 Markdown 報告包含：1.健康度評分(0-100分) 2.優點分析 3.潛在風險 4.修改建議(針對 Vibe Coding)。`;
+
+            try {
+                const response = await fetch(`${apiUrl}?key=${apiKey}`, {
+                    method: 'POST', headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+                });
+                if (!response.ok) throw new Error(`API Error: ${response.status}`);
+                const text = (await response.json()).candidates[0].content.parts[0].text;
+                document.getElementById('previewTitle').innerHTML = '<i class="fa-solid fa-user-doctor mr-2"></i>健檢報告';
+                const tag = document.getElementById('statusTag'); tag.innerHTML = '診斷完成'; tag.className = 'text-xs bg-amber-100 text-amber-700 px-2 py-1 rounded-full font-medium'; tag.classList.remove('hidden');
+                const prevContent = document.getElementById('previewContent'); prevContent.innerHTML = marked.parse(text); prevContent.classList.remove('hidden');
+                generatedText = text; if(window.saveRecord) window.saveRecord('healthCheck', data, generatedText);
+            } catch (error) { let msg = error.message; if (!apiKey && (msg.includes('403') || msg.includes('400'))) msg += " (請輸入 API Key)"; window.uiAlert('健檢失敗', msg, 'error'); } 
+            finally { btn.innerHTML = originalText; btn.disabled = false; document.getElementById('loadingState').classList.add('hidden'); }
+        }
+
+        async function generatePRD() {
+            const apiKey = getApiKey(); const apiUrl = getApiUrl(apiKey);
+            const btn = document.getElementById('generateBtn'); const originalBtnText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 撰寫中...'; btn.disabled = true;
+            document.getElementById('loadingText').innerText = 'AI 顧問正在撰寫規格書...'; document.getElementById('loadingState').classList.remove('hidden');
+            document.getElementById('emptyState').classList.add('hidden'); document.getElementById('previewContent').classList.add('hidden'); document.getElementById('statusTag').classList.add('hidden');
+
+            const data = {}; fields.forEach(id => { const el = document.getElementById(id); if(el) data[id] = el.value; });
+            generatedData = data; 
+            const sysInstruction = `你現在是${data.aiRole || '資深產品經理'}。任務：根據使用者輸入，輸出一份結構嚴謹可交付開發的《功能需求規格書 (FRS)》。
+            必須包含章節：1.專案摘要 2.使用者與情境 3.功能清單 4.品牌與介面規範(納入Brand/Creator資訊) 5.資料結構 6.非功能需求。
+            輸入：[專案基本資訊]名稱:${data.projectName}, 標題:${data.appDisplayTitle}, 描述:${data.oneLiner}
+            [品牌與創作者資訊]Logo:${data.appLogo}, 版權:${data.copyrightText}, 創作者:${data.creatorName}, 頭像:${data.creatorAvatar}, 簡介:${data.creatorBio}
+            [需求與期望]背景:${data.background}, 目標:${data.targetUser}, 排除:${data.exclusions}, KPI:${data.successMetrics}
+            [技術規格]開發:${data.devType}, 技術:${data.techStack}, 風格:${data.designStyle}, API策略:${data.apiKeyStrategy}
+            [功能]功能需求:${data.features}`;
+
+            try {
+                const response = await fetch(`${apiUrl}?key=${apiKey}`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ parts: [{ text: sysInstruction }] }] })
+                });
+                if (!response.ok) throw new Error(`API Error: ${response.status}`);
+                generatedText = (await response.json()).candidates[0].content.parts[0].text;
+                document.getElementById('previewTitle').innerHTML = '<i class="fa-solid fa-file-lines mr-2"></i>輸出預覽';
+                const tag = document.getElementById('statusTag'); tag.innerHTML = '生成完成'; tag.className = 'text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full font-medium'; tag.classList.remove('hidden');
+                const content = document.getElementById('previewContent'); content.innerHTML = marked.parse(generatedText); content.classList.remove('hidden');
+                if(window.saveRecord) window.saveRecord('prd', data, generatedText);
+            } catch (error) { let msg = error.message; if (!apiKey && (msg.includes('403') || msg.includes('400'))) msg += " (請輸入 API Key)"; window.uiAlert('生成失敗', msg, 'error'); document.getElementById('emptyState').classList.remove('hidden'); } 
+            finally { btn.innerHTML = originalBtnText; btn.disabled = false; document.getElementById('loadingState').classList.add('hidden'); }
+        }
+
+        function copyVibePrompt() {
+            if (!generatedText) return window.uiAlert('提示', '請先生成規格書', 'error');
+            const promptWrapper = `以下是一份完整的功能需求規格書(FRS)，請扮演資深工程師開發應用程式。請嚴格遵守其中的「品牌與介面規範」，確保Logo、版權文字正確顯示：\n\n${generatedText}`;
+            const textArea = document.createElement("textarea"); textArea.value = promptWrapper; textArea.style.position = "fixed"; textArea.style.left = "-9999px";
+            document.body.appendChild(textArea); textArea.focus(); textArea.select();
+            try { document.execCommand('copy'); window.uiAlert('複製成功', '已複製提示詞！您可以貼到 Cursor/Gemini。', 'success'); } 
+            catch (err) { window.uiAlert('複製失敗', '請手動選取複製。', 'error'); } finally { document.body.removeChild(textArea); }
+        }
+
+        function downloadJSON() {
+            if (!generatedText) return;
+            const blob = new Blob([JSON.stringify({meta: generatedData, spec: generatedText, generatedAt: new Date().toISOString()}, null, 2)], { type: 'application/json' });
+            downloadFile(blob, 'vibe_spec.json');
+        }
+
+        function downloadText() {
+            if (!generatedText) return;
+            const blob = new Blob([generatedText], { type: 'text/plain' }); downloadFile(blob, 'vibe_spec.txt');
+        }
+
+        function downloadWord() {
+            if (!generatedText) return;
+            const wordHTML = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Export HTML to Word Document</title><style>body { font-family: 'Calibri', sans-serif; }</style></head><body>${document.getElementById('previewContent').innerHTML}</body></html>`;
+            const blob = new Blob(['\ufeff', wordHTML], { type: 'application/msword' }); downloadFile(blob, 'vibe_spec.doc');
+        }
+
+        function downloadFile(blob, filename) {
+            const url = URL.createObjectURL(blob); const a = document.createElement('a');
+            const name = (document.getElementById('projectName').value || 'PRD').replace(/[^a-z0-9\u4e00-\u9fa5]/gi, '_');
+            a.href = url; a.download = `${name}_${filename}`; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        }
+    </script>
+</body>
+</html>
