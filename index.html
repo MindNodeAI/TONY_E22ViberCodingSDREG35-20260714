@@ -77,7 +77,6 @@
                 <p class="text-blue-200 text-sm mt-1">一站式 PRD 規格生成 SaaS</p>
             </div>
             
-            <!-- 特別聲明教學核心 -->
             <div class="bg-indigo-50 border-b border-indigo-100 p-3 text-center shrink-0 shadow-inner">
                 <p class="text-xs text-indigo-800 font-bold mb-0.5">🎯 教學核心架構</p>
                 <p class="text-[11px] text-indigo-600 font-medium">Gemini Canvas + Firebase (Auth / Firestore / Storage)<br>Serverless 無伺服器全端架構</p>
@@ -205,7 +204,6 @@
         </div>
 
         <div class="flex items-center gap-3 flex-wrap">
-            <!-- API Key Input Field (Restored) -->
             <div class="hidden md:flex items-center gap-2 bg-slate-700/60 p-1.5 rounded border border-slate-600 shadow-inner">
                 <input type="password" id="uiApiKeyInput" placeholder="輸入您的 Gemini API Key" class="bg-transparent text-white text-sm outline-none w-48 px-2 placeholder-slate-400 focus:text-blue-300">
                 <button onclick="toggleUiApiKeyVisibility()" class="text-slate-400 hover:text-white px-1 transition-colors" title="顯示/隱藏">
@@ -327,7 +325,7 @@
                                 <option value="" disabled selected>▼</option>
                                 <option value="HTML單檔, Tailwind, JS, Gemini API">輕量級 (HTML單檔 + Tailwind + Gemini)</option>
                                 <option value="HTML, Tailwind, JS, Firebase (Firestore/Storage), Gemini API">標準版 (網頁 + Firebase 核心 + Gemini)</option>
-                                <option value="React單檔, Tailwind, Firebase (Auth/Firestore), Gemini API">進階版 (React單檔 + Firebase 全餐 + Gemini)</option>
+                                <option value="HTML單檔, Tailwind, JS, Firebase (Auth/Firestore), Gemini API">進階版 (HTML單檔 + Firebase 全餐 + Gemini)</option>
                             </select>
                         </div>
                     </div>
@@ -351,7 +349,7 @@
                         <label class="block text-sm font-medium text-slate-700 mb-1">AI 扮演角色 (決定規格側重點)</label>
                         <div class="flex">
                             <input type="text" id="aiRole" class="w-full p-2 border border-slate-300 border-r-0 rounded-l text-sm focus:ring-2 focus:ring-blue-200 outline-none" placeholder="選擇角色...">
-                            <select onchange="document.getElementById('aiRole').value=this.value; this.selectedIndex=0;" class="bg-slate-100 border border-slate-300 rounded-r text-sm px-1 cursor-center appearance-none">
+                            <select onchange="document.getElementById('aiRole').value=this.value; this.selectedIndex=0;" class="bg-slate-100 border border-slate-300 rounded-r text-sm px-1 cursor-pointer w-8 text-center appearance-none">
                                 <option value="" disabled selected>▼</option>
                                 <option value="資深產品經理 (Product Manager)">產品經理 (重視商業邏輯與 User Story)</option>
                                 <option value="使用者體驗設計師 (UX Designer)">UX 設計師 (重視操作體驗與防呆)</option>
@@ -363,31 +361,36 @@
 
                 <div class="space-y-3">
                     <h3 class="text-sm font-bold text-blue-600 uppercase tracking-wider border-b border-blue-100 pb-1">6. 品牌與創作者</h3>
-                    <div class="grid grid-cols-2 gap-3">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div>
                             <label class="block text-sm font-medium text-slate-700 mb-1">App 顯示名稱</label>
-                            <input type="text" id="appDisplayTitle" class="w-full p-2 border border-slate-300 rounded text-sm">
+                            <input type="text" id="appDisplayTitle" class="w-full p-2 border border-slate-300 rounded text-sm focus:ring-2 focus:ring-blue-200 outline-none" placeholder="">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-slate-700 mb-1">Logo (Emoji/URL)</label>
-                            <input type="text" id="appLogo" class="w-full p-2 border border-slate-300 rounded text-sm" placeholder="🔮">
+                            <input type="text" id="appLogo" class="w-full p-2 border border-slate-300 rounded text-sm focus:ring-2 focus:ring-blue-200 outline-none" value="🔮">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-slate-700 mb-1">創作者名稱</label>
-                            <input type="text" id="creatorName" class="w-full p-2 border border-slate-300 rounded text-sm" placeholder="Tony 老師">
+                            <input type="text" id="creatorName" class="w-full p-2 border border-slate-300 rounded text-sm focus:ring-2 focus:ring-blue-200 outline-none" placeholder="Tony 老師">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-slate-700 mb-1">創作者頭像 (URL)</label>
-                            <input type="text" id="creatorAvatar" class="w-full p-2 border border-slate-300 rounded text-sm">
+                            <input type="text" id="creatorAvatar" class="w-full p-2 border border-slate-300 rounded text-sm focus:ring-2 focus:ring-blue-200 outline-none" placeholder="">
                         </div>
+                    </div>
+                    <!-- 新增的創作者介紹欄位 -->
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">創作者介紹</label>
+                        <textarea id="creatorBio" rows="2" class="w-full p-2 border border-slate-300 rounded text-sm focus:ring-2 focus:ring-blue-200 outline-none" placeholder="簡單介紹創作者的專業背景或理念..."></textarea>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-slate-700 mb-1">版權文字 (Footer)</label>
-                        <input type="text" id="copyrightText" class="w-full p-2 border border-slate-300 rounded text-sm" placeholder="© 2026 Tony AI. All rights reserved.">
+                        <input type="text" id="copyrightText" class="w-full p-2 border border-slate-300 rounded text-sm focus:ring-2 focus:ring-blue-200 outline-none" placeholder="© 2026 Tony AI. All rights reserved.">
                     </div>
                 </div>
 
-                <div class="h-6"></div>
+                <div class="h-24"></div>
             </div>
 
             <div class="p-3 sm:p-4 border-t border-slate-200 bg-white grid grid-cols-3 gap-2 shrink-0 pb-[max(env(safe-area-inset-bottom),1rem)]">
@@ -413,7 +416,6 @@
                         <i class="fa-solid fa-robot"></i> <span class="hidden sm:inline">複製 Vibe Prompt</span><span class="sm:hidden">複製 Prompt</span>
                     </button>
                     <div class="h-6 w-px bg-slate-300 mx-1 hidden lg:block"></div>
-                    <!-- Export Options Restored! -->
                     <button onclick="downloadJSON()" class="hidden lg:flex text-slate-600 hover:bg-slate-100 px-2 sm:px-3 py-1.5 rounded text-xs sm:text-sm border border-slate-300 items-center gap-1 bg-white shadow-sm transition-colors">
                         <i class="fa-solid fa-code text-slate-400"></i> JSON
                     </button>
@@ -427,7 +429,6 @@
             </div>
 
             <div class="flex-1 overflow-y-auto p-4 sm:p-8 relative pb-[max(env(safe-area-inset-bottom),2rem)]">
-                
                 <div id="loadingState" class="hidden absolute inset-0 bg-white/90 z-20 flex flex-col items-center justify-center">
                     <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
                     <p id="loadingText" class="text-slate-700 font-bold animate-pulse text-center px-4">正在透過 Gemini 3.5 Flash<br>為您撰寫規格書...</p>
@@ -545,7 +546,7 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // --- Custom UI Overrides (Alert/Confirm) ---
+        // --- Custom UI Overrides ---
         window.showUiAlert = function(msg) {
             document.getElementById('uiAlertMessage').innerText = msg;
             document.getElementById('uiAlert').classList.remove('hidden');
@@ -569,7 +570,7 @@
         window.db = db; 
         window.auth = auth;
         
-        // --- API Key UI Logic (Restored) ---
+        // --- API Key UI Logic ---
         window.toggleUiApiKeyVisibility = () => {
             const input = document.getElementById('uiApiKeyInput');
             const icon = document.getElementById('uiApiKeyEyeIcon');
@@ -580,7 +581,6 @@
             }
         };
 
-        // Load/Save API Key automatically
         document.addEventListener('DOMContentLoaded', () => {
             const uiInput = document.getElementById('uiApiKeyInput');
             const uiCheckbox = document.getElementById('uiSaveApiKeyCheckbox');
@@ -669,24 +669,22 @@
                     const role = document.getElementById('authRole').value;
                     if (!name) throw new Error('請輸入真實姓名');
                     
-                    window.isRegistering = true; // Lock State
+                    window.isRegistering = true;
                     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                     const user = userCredential.user;
                     
                     const isAdmin = email.toLowerCase() === 'mindnodeai@gmail.com';
                     const userLevel = isAdmin ? 'admin' : 'user';
 
-                    // Save Profile
                     await setDoc(doc(db, "public", "data", "userProfiles", user.uid), {
                         name: name, email: email, role: role, level: userLevel,
                         createdAt: Date.now(), loginCount: 0
                     });
 
-                    // Send Email
                     await sendEmailVerification(user);
                     
-                    window.isRegistering = false; // Unlock
-                    await signOut(auth); // Safe logout
+                    window.isRegistering = false;
+                    await signOut(auth);
                     
                     showSuccess('註冊成功！請至信箱點擊驗證連結。');
                     switchAuthTab('login');
@@ -700,7 +698,6 @@
                         throw new Error('信箱尚未驗證！請前往信箱點擊驗證連結。');
                     }
                     
-                    // Update Login Count
                     const userDocRef = doc(db, "public", "data", "userProfiles", user.uid);
                     const docSnap = await getDoc(userDocRef);
                     if (docSnap.exists()) {
@@ -747,7 +744,6 @@
             }
             try {
                 await signOut(auth);
-                // Hard reload to clear all states cleanly
                 window.location.reload(); 
             } catch (e) {
                 window.showUiAlert("登出時發生錯誤：" + e.message);
@@ -840,7 +836,7 @@
             if(await window.showUiConfirm("確定要刪除此會員的資料庫紀錄嗎？\n\n(注意：這只會刪除 Firestore 資料，不會刪除 Firebase Auth 帳號)")) {
                 try {
                     await deleteDoc(doc(db, "public", "data", "userProfiles", uid));
-                    window.openAdminDashboard(); // Refresh
+                    window.openAdminDashboard();
                 } catch(e) { window.showUiAlert('刪除失敗：\n' + e.message); }
             }
         };
@@ -848,7 +844,7 @@
         window.exportCSV = async () => {
             try {
                 const querySnapshot = await getDocs(collection(db, "public", "data", "userProfiles"));
-                let csvContent = "\uFEFF"; // BOM for UTF-8 Excel compatibility
+                let csvContent = "\uFEFF"; 
                 csvContent += "真實姓名,電子信箱,身分,系統權限,登入次數,註冊時間\n";
                 
                 querySnapshot.forEach(docSnap => {
@@ -857,7 +853,6 @@
                     if(d.createdAt) {
                         try{ dateStr = new Date(d.createdAt).toLocaleString().replace(/,/g, ''); }catch(e){}
                     }
-                    // Handle potential commas in text fields by wrapping in quotes
                     const safeName = d.name ? `"${d.name.replace(/"/g, '""')}"` : "";
                     const safeRole = d.role ? `"${d.role.replace(/"/g, '""')}"` : "";
                     
@@ -875,7 +870,7 @@
             } catch(e) { window.showUiAlert("匯出失敗：\n" + e.message); }
         };
 
-        // --- HISTORY & GENERATION SYNCHRONIZATION ---
+        // --- HISTORY ---
         function setupRealtimeHistory(uid) {
             const historyRef = collection(db, 'users', uid, 'history');
             const q = query(historyRef, orderBy('createdAt', 'desc'));
@@ -971,10 +966,11 @@
     </script>
 
     <script>
+        // 確保將 creatorBio 加入收集名單
         const fields = [
             'projectName', 'oneLiner', 'background', 'targetUser', 'exclusions', 'successMetrics', 
             'devType', 'techStack', 'designStyle', 'apiKeyStrategy', 'features', 'aiRole',
-            'appDisplayTitle', 'appLogo', 'copyrightText', 'creatorName', 'creatorAvatar'
+            'appDisplayTitle', 'appLogo', 'copyrightText', 'creatorName', 'creatorAvatar', 'creatorBio'
         ];
         
         let generatedText = "";
@@ -1015,7 +1011,7 @@
                 document.getElementById('previewContent').innerHTML = marked.parse(generatedText);
                 document.getElementById('previewContent').classList.remove('hidden');
             }
-            toggleHistoryModal(); // Close modal after loading
+            toggleHistoryModal();
         }
 
         window.clearForm = async () => {
@@ -1028,19 +1024,15 @@
             }
         };
 
-        // 核心呼叫 API (Gemini 3.5 Flash)
         async function callGemini(promptText, isJson = false) {
-            // 從 Header 的 Input 取得 Key
             const uiInput = document.getElementById('uiApiKeyInput');
             let apiKey = uiInput ? uiInput.value.trim() : "";
             
             if(!apiKey) {
-                // 如果 UI 沒填，跳出提示，不再使用醜陋的 prompt()
                 window.showUiAlert("執行失敗：\n請先在右上角輸入您的「Gemini 3.5 Flash API Key」。\n若無金鑰，請點擊旁邊的連結免費申請。");
                 throw new Error("缺少 API Key");
             }
             
-            // 強制指向 Gemini 3.5 Flash
             const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`;
             const payload = { contents: [{ parts: [{ text: promptText }] }] };
             if(isJson) payload.generationConfig = { responseMimeType: "application/json" };
@@ -1056,11 +1048,11 @@
             return result.candidates[0].content.parts[0].text;
         }
 
-        // --- Feature 1: AI Auto Fill ---
+        // --- Feature 1: AI Auto Fill (升級防禦版) ---
         window.autoFillForm = async () => {
             const data = getFormData();
-            if(!data.projectName && !data.oneLiner) {
-                return window.showUiAlert('提示：\n請至少填寫「專案名稱」或「一句話描述」，AI 才能依據線索幫您發想藍圖！');
+            if(!data.projectName && !data.oneLiner && !data.features) {
+                return window.showUiAlert('提示：\n請至少填寫「專案名稱」、「一句話描述」或「功能需求列表」，AI 才能依據線索幫您發想藍圖！');
             }
 
             const btn = document.querySelector('button[onclick="autoFillForm()"]');
@@ -1068,27 +1060,31 @@
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> 發想中...';
             btn.disabled = true;
 
-            const prompt = `你是一位資深技術型產品經理 (Technical PM)，專精於使用「Gemini Canvas + Firebase」架構來開發 Web 應用。使用者想做一個名為 "${data.projectName}" 的專案，一句話描述為 "${data.oneLiner}"。
-            請根據這有限的資訊，進行發想並回傳純 JSON 格式（絕對不要包含 markdown 標記如 \`\`\`json ）。
+            const prompt = `你是一位資深技術型產品經理 (Technical PM)，專精於使用「Gemini Canvas + Firebase」架構來開發 Web 應用。
+            使用者目前提供的專案資訊如下：
+            - 專案名稱: "${data.projectName || '未提供'}"
+            - 一句話描述: "${data.oneLiner || '未提供'}"
+            - 已知功能需求: "${data.features || '未提供'}"
+            
+            請根據這有限的資訊，進行發想並回傳純 JSON 格式。
 
-            【重要邏輯約束與品質要求】：
-            1. 你的技術建議必須與功能需求完全匹配。如果功能包含「拍照/圖片上傳、會員登入、歷史紀錄、跨裝置同步」，開發型態【絕對不能】選純前端，必須選包含 Firebase 的選項。
-            2. 如果是簡單的文字生成、計算機，請選「純前端 (HTML/JS + LocalStorage)」。
-            3. 產出的「功能需求 (features)」與「成功標準 (successMetrics)」必須具備資深水準，請主動加入「防呆機制」、「邊界條件(Edge cases)」或「空狀態(Empty State)」的考量，讓草稿具備高成熟度。
-            4. 請嚴格從括號內的選項挑選最適合的填入 JSON（字串必須完全吻合）：
+            【最高指導原則與邏輯防呆 - 違者嚴懲】：
+            1. 你的技術建議必須與功能需求完全匹配。若包含「會員登入」、「註冊」、「雲端同步」、「資料庫」等，絕對禁止選擇「純前端」。
+            2. 請嚴格從括號內的選項挑選最適合的填入 JSON：
                - devType: ["純前端 (HTML/JS + LocalStorage)", "Serverless 全端 (HTML/JS + Firebase)", "Serverless 會員制 (Firebase Auth + Firestore)"]
-               - techStack: ["HTML單檔, Tailwind, JS, Gemini API", "HTML, Tailwind, JS, Firebase (Firestore/Storage), Gemini API", "HTML, Tailwind, JS, Firebase (Auth/Firestore/Storage), Gemini API"]
-               - apiKeyStrategy: ["使用者自行輸入 (Session/Local) - 適合免費用戶端工具", "Firebase Cloud Functions 後端代理 - 商業SaaS首選 (隱藏金鑰、控制成本)", "Firebase 官方擴充套件 (Extensions) - 適合官方支援的單一自動化任務"]
+               - techStack: ["HTML單檔, Tailwind, JS, Gemini API", "HTML, Tailwind, JS, Firebase (Firestore/Storage), Gemini API", "HTML單檔, Tailwind, JS, Firebase (Auth/Firestore), Gemini API"]
+               - apiKeyStrategy: ["使用者自行輸入 (Session/Local)", "Firebase Cloud Functions 後端代理 (自己寫後端程式碼)", "Firebase 官方擴充套件 (Extensions - 官方做好的 No-Code 套件)"]
                - designStyle: ["科技極簡 (黑白灰色調、大面積留白、Apple風格)", "專業商務 (藍灰色調、嚴謹排版、適合企業級 Dashboard)", "暗黑科技 (深色黑底、螢光色點綴、適合開發者工具或 AI 應用)", "溫馨親和 (暖色系、大圓角、適合教育或社群)", "優雅質感 (米白色調、纖細字體、適合生活風格或品牌展示)", "前衛新潮 (高飽和鮮明色彩、粗框線、活潑動態感)"]
                - aiRole: ["資深產品經理 (Product Manager)", "使用者體驗設計師 (UX Designer)", "Gemini Canvas 開發專家 (Tech Lead)"]
 
             【預期輸出的 JSON 格式】：
             {
+              "reasoning": "說明選擇該架構的理由...",
               "background": "問題背景...",
               "targetUser": "目標使用者...",
-              "exclusions": "不做什麼 (請依據你的技術選擇寫明限制，例如純前端就寫不做雲端儲存)...",
+              "exclusions": "不做什麼...",
               "successMetrics": "成功標準...",
-              "features": "功能需求 (條列式，請確保與所選的 devType 邏輯相符)...",
+              "features": "功能需求 (條列式)...",
               "devType": "...",
               "techStack": "...",
               "apiKeyStrategy": "...",
@@ -1098,25 +1094,45 @@
 
             try {
                 const jsonText = await callGemini(prompt, true);
-                
-                // Gemini 有時即使設定了 JSON 模式，還是會包裝在 ```json 中，這裡做個雙重保險過濾
                 const cleanJsonText = jsonText.replace(/```json/g, '').replace(/```/g, '').trim();
                 const aiData = JSON.parse(cleanJsonText);
                 
-                const fill = (id, val) => { const el = document.getElementById(id); if(el && !el.value && val) el.value = val; };
+                let finalDevType = aiData.devType || "";
+                let finalTechStack = aiData.techStack || "";
+                
+                // 強制攔截：只要有敏感字，直接綁死為會員制，徹底消除純前端與 React 的幻覺！
+                const checkText = ((aiData.features || "") + (aiData.successMetrics || "") + (data.features || "") + (data.oneLiner || "")).toLowerCase();
+                
+                if (checkText.includes("登入") || checkText.includes("註冊") || checkText.includes("綁定") || checkText.includes("auth") || checkText.includes("跨裝置") || checkText.includes("健康檔案") || checkText.includes("同步") || checkText.includes("家人")) {
+                    finalDevType = "Serverless 會員制 (Firebase Auth + Firestore)";
+                    finalTechStack = "HTML單檔, Tailwind, JS, Firebase (Auth/Firestore), Gemini API";
+                } else if (checkText.includes("歷史") || checkText.includes("上傳") || checkText.includes("拍照") || checkText.includes("儲存") || checkText.includes("firestore") || checkText.includes("紀錄")) {
+                    if(finalDevType.includes("純前端")) finalDevType = "Serverless 全端 (HTML/JS + Firebase)";
+                    if(finalTechStack === "HTML單檔, Tailwind, JS, Gemini API") finalTechStack = "HTML, Tailwind, JS, Firebase (Firestore/Storage), Gemini API";
+                }
+
+                if(finalTechStack.includes("React")) {
+                    finalTechStack = "HTML單檔, Tailwind, JS, Firebase (Auth/Firestore), Gemini API";
+                }
+
+                const fill = (id, val) => { 
+                    const el = document.getElementById(id); 
+                    if(el && val) el.value = val;
+                };
+                
                 fill('background', aiData.background);
                 fill('targetUser', aiData.targetUser);
                 fill('exclusions', aiData.exclusions);
                 fill('successMetrics', aiData.successMetrics);
                 fill('features', aiData.features);
-                fill('devType', aiData.devType);
-                fill('techStack', aiData.techStack);
+                fill('devType', finalDevType);
+                fill('techStack', finalTechStack);
                 fill('apiKeyStrategy', aiData.apiKeyStrategy);
                 fill('designStyle', aiData.designStyle);
                 fill('aiRole', aiData.aiRole);
                 if(!document.getElementById('appDisplayTitle').value) document.getElementById('appDisplayTitle').value = data.projectName;
                 
-                window.showUiAlert('✨ 魔法完成！\nAI 已為您填入完整的產品架構草稿！並且已確保前後端技術邏輯的一致性。');
+                window.showUiAlert('✨ 魔法完成！\nAI 已為您填入完整的產品架構草稿！並且已啟動【防呆保護】，確保前後端技術邏輯完美一致。');
             } catch(e) {
                 if(e.message !== "缺少 API Key") window.showUiAlert('AI 發想失敗: \n' + e.message);
             } finally {
@@ -1147,11 +1163,10 @@
             
             【評分基準與審查邏輯 - 極度重要】：
             這是一份即將交給「Gemini Canvas (AI)」進行開發的早期規格草稿。
-            1. 只要「商業邏輯一致」且「前端與 Firebase 架構選擇沒有矛盾」（例如：沒有在純前端要求存取歷史資料），請給予 85~95 分的基礎高分。
-            2. 不要因為「缺少詳細程式碼實作細節」或「缺少細部資安規則」而隨意扣分，因為這些是後續 Gemini Canvas 的工作。
-            3. 扣分標準僅限於：技術架構產生嚴重矛盾、功能與目標客群完全脫節、或是缺乏明確的核心價值。
+            1. **【85分保底標準】**：只要「商業邏輯一致」且「前端與 Firebase 架構選擇沒有矛盾」，請給予 85~95 分的基礎高分。
+            2. **【寬容審查】**：這是一份早期藍圖，絕對不要因為「缺少詳細程式碼實作細節」而扣分。
             
-            請輸出 Markdown 報告：1. 健康度評分(0-100) 2. 優點分析 3. 潛在風險與盲點 4. 具體修改建議 (如何讓這份規格在 Gemini Canvas 中獲得更好的開發結果)。用繁體中文。`;
+            請輸出 Markdown 報告：1. 健康度評分(0-100) 2. 優點分析 3. 潛在風險與盲點 4. 具體修改建議。`;
 
             try {
                 const text = await callGemini(prompt);
@@ -1162,7 +1177,7 @@
                 
                 document.getElementById('previewContent').innerHTML = marked.parse(text);
                 document.getElementById('previewContent').classList.remove('hidden');
-                generatedText = text; // allow export
+                generatedText = text;
                 
                 if(window.saveToCloudHistory) window.saveToCloudHistory('健檢', data, text);
             } catch(e) {
@@ -1191,15 +1206,22 @@
 
             const prompt = `你現在是${data.aiRole || 'Gemini Canvas 開發專家 (Tech Lead)'}。
             任務：根據以下輸入，輸出一份結構嚴謹、專門用來交付給「Gemini Canvas」進行 Vibe Coding 開發的《一站式產品需求規格書 (PRD)》。
-            必須包含：1. 專案摘要與目標 2. 使用者與情境 3. 功能清單 4. 品牌與介面規範 5. Firebase 資料庫結構 (Firestore/Storage Schema) 6. API與金鑰策略
+            
+            這份文件必須「嚴格遵循」以下大綱結構產出：
+            1. **專案摘要與目標**：必須包含「專有名詞定義 (解釋 Vibe Coding)」以及「為什麼是 PRD？(傳統文件如 BRD/SDD 在 Vibe Coding 的典範轉移)」。
+            2. **使用者與情境 (Persona & User Story)**。
+            3. **功能清單與限制**：列出核心功能，並強烈標示「不做什麼 (Scope Exclusion)」。
+            4. **品牌與介面規範**。
+            5. **運作流程與資料流**：必須包含 1. 純文字 ASCII 視覺圖 與 2. Mermaid 語法流程圖 (使用 \`\`\`mermaid 包裝)。
+            6. **Firebase 資料庫結構 (Firestore/Storage Schema)**。
+            7. **例外狀況與錯誤處理 (Edge Cases)**：定義可能發生的錯誤。
             
             [資訊]
             - 專案: ${data.projectName} (${data.oneLiner})
             - 顯示標題: ${data.appDisplayTitle} / Logo: ${data.appLogo}
-            - 創作者: ${data.creatorName} / 版權: ${data.copyrightText}
-            - 背景: ${data.background} / 客群: ${data.targetUser} / 排除範圍: ${data.exclusions}
-            - 開發型態: ${data.devType} / 技術: ${data.techStack} / 風格: ${data.designStyle}
-            - API 策略: ${data.apiKeyStrategy}
+            - 創作者: ${data.creatorName} / 介紹: ${data.creatorBio || '未提供'} / 版權: ${data.copyrightText}
+            - 背景: ${data.background} / 排除範圍: ${data.exclusions}
+            - 開發型態: ${data.devType} / 技術: ${data.techStack} 
             - 功能: ${data.features}`;
 
             try {
@@ -1225,7 +1247,7 @@
             }
         };
 
-        // --- EXPORT TOOLS (Restored JSON, Word, Txt, Copy) ---
+        // --- EXPORT TOOLS ---
         function getSafeFilename(suffix) {
             const projectName = document.getElementById('projectName').value || 'PRD';
             const safeName = projectName.replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g, '_');
@@ -1243,7 +1265,7 @@
 
         window.copyVibePrompt = () => {
             if (!generatedText) return window.showUiAlert('無內容可複製，請先生成 PRD 規格書。');
-            const promptWrapper = `以下是一份完整的一站式產品需求規格書 (PRD)，請扮演資深 Gemini Canvas 開發專家，使用 Firebase (Auth/Firestore/Storage) 作為後端架構，根據此規格進行開發，並確保品牌與創作者資訊融入 UI 之中：\n\n${generatedText}`;
+            const promptWrapper = `以下是一份完整的一站式產品需求規格書 (PRD)，請扮演資深 Gemini Canvas 開發專家，使用 Firebase 作為後端架構，根據此規格進行開發，並確保品牌與創作者資訊融入 UI 之中：\n\n${generatedText}`;
             
             const ta = document.createElement("textarea");
             ta.value = promptWrapper;
