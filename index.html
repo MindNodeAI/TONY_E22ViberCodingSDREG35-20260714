@@ -1071,10 +1071,11 @@
             const prompt = `你是一位資深技術型產品經理 (Technical PM)，專精於使用「Gemini Canvas + Firebase」架構來開發 Web 應用。使用者想做一個名為 "${data.projectName}" 的專案，一句話描述為 "${data.oneLiner}"。
             請根據這有限的資訊，進行發想並回傳純 JSON 格式（絕對不要包含 markdown 標記如 \`\`\`json ）。
 
-            【重要邏輯約束】：
+            【重要邏輯約束與品質要求】：
             1. 你的技術建議必須與功能需求完全匹配。如果功能包含「拍照/圖片上傳、會員登入、歷史紀錄、跨裝置同步」，開發型態【絕對不能】選純前端，必須選包含 Firebase 的選項。
             2. 如果是簡單的文字生成、計算機，請選「純前端 (HTML/JS + LocalStorage)」。
-            3. 請嚴格從括號內的選項挑選最適合的填入 JSON（字串必須完全吻合）：
+            3. 產出的「功能需求 (features)」與「成功標準 (successMetrics)」必須具備資深水準，請主動加入「防呆機制」、「邊界條件(Edge cases)」或「空狀態(Empty State)」的考量，讓草稿具備高成熟度。
+            4. 請嚴格從括號內的選項挑選最適合的填入 JSON（字串必須完全吻合）：
                - devType: ["純前端 (HTML/JS + LocalStorage)", "Serverless 全端 (HTML/JS + Firebase)", "Serverless 會員制 (Firebase Auth + Firestore)"]
                - techStack: ["HTML單檔, Tailwind, JS, Gemini API", "HTML, Tailwind, JS, Firebase (Firestore/Storage), Gemini API", "HTML, Tailwind, JS, Firebase (Auth/Firestore/Storage), Gemini API"]
                - apiKeyStrategy: ["使用者自行輸入 (Session/Local) - 適合免費用戶端工具", "Firebase Cloud Functions 後端代理 - 商業SaaS首選 (隱藏金鑰、控制成本)", "Firebase 官方擴充套件 (Extensions) - 適合官方支援的單一自動化任務"]
@@ -1142,7 +1143,15 @@
             專案: ${data.projectName} (${data.oneLiner})
             背景: ${data.background}
             功能: ${data.features}
-            請輸出 Markdown 報告：1. 健康度評分(0-100) 2. 優點分析 3. 潛在風險/缺失 4. 具體修改建議(針對 Vibe Coding 開發模式)。用繁體中文。`;
+            開發型態: ${data.devType}
+            
+            【評分基準與審查邏輯 - 極度重要】：
+            這是一份即將交給「Gemini Canvas (AI)」進行開發的早期規格草稿。
+            1. 只要「商業邏輯一致」且「前端與 Firebase 架構選擇沒有矛盾」（例如：沒有在純前端要求存取歷史資料），請給予 85~95 分的基礎高分。
+            2. 不要因為「缺少詳細程式碼實作細節」或「缺少細部資安規則」而隨意扣分，因為這些是後續 Gemini Canvas 的工作。
+            3. 扣分標準僅限於：技術架構產生嚴重矛盾、功能與目標客群完全脫節、或是缺乏明確的核心價值。
+            
+            請輸出 Markdown 報告：1. 健康度評分(0-100) 2. 優點分析 3. 潛在風險與盲點 4. 具體修改建議 (如何讓這份規格在 Gemini Canvas 中獲得更好的開發結果)。用繁體中文。`;
 
             try {
                 const text = await callGemini(prompt);
