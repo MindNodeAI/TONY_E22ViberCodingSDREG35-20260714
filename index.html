@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Vibe Coding 規格平台 | Tony Studio</title>
+    <title>Vibe Coding 規格平台 | @2020 TonyStudio</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -50,7 +50,7 @@
             </div>
             <div class="p-5 text-slate-700 text-sm whitespace-pre-line" id="uiAlertMessage"></div>
             <div class="p-3 bg-slate-50 border-t border-slate-100 flex justify-end">
-                <button onclick="closeUiAlert()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded text-sm transition-colors">確定</button>
+                <button onclick="closeUiAlert()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded text-sm transition-colors font-medium">確定</button>
             </div>
         </div>
     </div>
@@ -62,8 +62,8 @@
             </div>
             <div class="p-5 text-slate-700 text-sm whitespace-pre-line" id="uiConfirmMessage"></div>
             <div class="p-3 bg-slate-50 border-t border-slate-100 flex justify-end gap-2">
-                <button onclick="closeUiConfirm(false)" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-4 py-1.5 rounded text-sm transition-colors">取消</button>
-                <button onclick="closeUiConfirm(true)" class="bg-red-600 hover:bg-red-700 text-white px-4 py-1.5 rounded text-sm transition-colors">確定執行</button>
+                <button onclick="closeUiConfirm(false)" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-4 py-1.5 rounded text-sm transition-colors font-medium">取消</button>
+                <button onclick="closeUiConfirm(true)" class="bg-red-600 hover:bg-red-700 text-white px-4 py-1.5 rounded text-sm transition-colors font-medium">確定執行</button>
             </div>
         </div>
     </div>
@@ -74,7 +74,7 @@
             <div class="bg-gradient-to-r from-blue-700 to-indigo-800 p-6 text-center shrink-0">
                 <img src="https://i.postimg.cc/fT2sQW09/1.png" alt="Logo" class="w-16 h-16 mx-auto bg-white p-2 rounded-xl shadow-lg mb-4 object-contain">
                 <h2 class="text-2xl font-bold text-white">Vibe Coding 平台</h2>
-                <p class="text-blue-200 text-sm mt-1">一站式 PRD 規格生成 SaaS</p>
+                <p class="text-blue-200 text-sm mt-1">@2020 TonyStudio 專屬全端教學</p>
             </div>
             
             <div class="bg-indigo-50 border-b border-indigo-100 p-3 text-center shrink-0 shadow-inner">
@@ -154,10 +154,10 @@
                 <h1 class="text-lg font-bold">系統管理員後台</h1>
             </div>
             <div class="flex gap-3">
-                <button onclick="exportCSV()" class="bg-green-600 hover:bg-green-700 px-3 py-1.5 rounded text-sm shadow-sm flex items-center gap-2 transition-colors">
+                <button onclick="exportCSV()" class="bg-green-600 hover:bg-green-700 px-3 py-1.5 rounded text-sm shadow-sm flex items-center gap-2 transition-colors font-medium">
                     <i class="fa-solid fa-file-csv"></i> 匯出 CSV
                 </button>
-                <button onclick="closeAdminDashboard()" class="bg-slate-700 hover:bg-slate-600 px-3 py-1.5 rounded text-sm border border-slate-500 transition-colors">
+                <button onclick="closeAdminDashboard()" class="bg-slate-700 hover:bg-slate-600 px-3 py-1.5 rounded text-sm border border-slate-500 transition-colors font-medium">
                     返回系統
                 </button>
             </div>
@@ -196,10 +196,10 @@
                 <div class="flex items-center gap-2">
                     <h1 class="text-lg font-bold tracking-wide">Vibe Coding 規格平台</h1>
                     <span class="hidden sm:flex text-[10px] bg-gradient-to-r from-purple-500 to-blue-500 text-white px-2 py-0.5 rounded-full font-bold items-center gap-1 shadow-sm border border-white/20">
-                        <i class="fa-solid fa-bolt text-yellow-300"></i> Gemini 3.7 Flash
+                        <i class="fa-solid fa-bolt text-yellow-300"></i> Gemini 3.8 Flash
                     </span>
                 </div>
-                <p class="text-[11px] text-blue-300 mt-0.5 font-medium tracking-wide">專為 Gemini Canvas + Firebase 全端教學設計</p>
+                <p class="text-[11px] text-blue-300 mt-0.5 font-medium tracking-wide">@2020 TonyStudio 專屬教學設計</p>
             </div>
         </div>
 
@@ -219,11 +219,11 @@
             <div class="h-6 w-px bg-slate-600 hidden sm:block"></div>
 
             <button onclick="toggleHistoryModal()" class="text-sm bg-slate-700 hover:bg-slate-600 px-3 py-1.5 rounded transition-colors flex items-center gap-2 border border-slate-600 shadow-sm">
-                <i class="fa-solid fa-clock-rotate-left text-blue-300"></i> <span class="hidden lg:inline">歷史紀錄</span>
+                <i class="fa-solid fa-clock-rotate-left text-blue-300"></i> <span class="hidden lg:inline font-medium">歷史紀錄</span>
             </button>
             <button onclick="toggleAboutModal()" class="text-sm bg-slate-700 hover:bg-slate-600 px-3 py-1.5 rounded transition-colors flex items-center gap-2 border border-slate-600 shadow-sm">
                 <img src="https://i.postimg.cc/Gh8Zt7SX/S_56844323.jpg" class="w-5 h-5 rounded-full border border-slate-500 object-cover">
-                <span class="hidden lg:inline">關於顧問</span>
+                <span class="hidden lg:inline font-medium">關於顧問</span>
             </button>
             <button id="adminBtn" onclick="openAdminDashboard()" class="hidden text-sm bg-indigo-600 hover:bg-indigo-500 px-3 py-1.5 rounded transition-colors items-center gap-2 font-medium shadow-sm">
                 <i class="fa-solid fa-shield"></i> <span class="hidden xl:inline">管理後台</span>
@@ -249,7 +249,7 @@
                     <button onclick="autoFillForm()" title="✨ AI 根據標題自動填寫" class="text-purple-600 hover:text-purple-800 font-medium px-2 py-1 bg-purple-50 rounded border border-purple-200 hover:bg-purple-100 transition-colors shadow-sm">
                         <i class="fa-solid fa-sparkles mr-1"></i>AI 幫我想
                     </button>
-                    <button onclick="clearForm()" class="text-slate-500 hover:text-red-500 underline px-2 py-1 decoration-slate-300 hover:decoration-red-300">清空</button>
+                    <button onclick="clearForm()" class="text-slate-500 hover:text-red-500 underline px-2 py-1 decoration-slate-300 hover:decoration-red-300 font-medium">清空</button>
                 </div>
             </div>
             
@@ -372,21 +372,20 @@
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-slate-700 mb-1">創作者名稱</label>
-                            <input type="text" id="creatorName" class="w-full p-2 border border-slate-300 rounded text-sm focus:ring-2 focus:ring-blue-200 outline-none" placeholder="Tony 老師">
+                            <input type="text" id="creatorName" class="w-full p-2 border border-slate-300 rounded text-sm focus:ring-2 focus:ring-blue-200 outline-none" value="Tony 老師">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-slate-700 mb-1">創作者頭像 (URL)</label>
                             <input type="text" id="creatorAvatar" class="w-full p-2 border border-slate-300 rounded text-sm focus:ring-2 focus:ring-blue-200 outline-none" placeholder="">
                         </div>
                     </div>
-                    <!-- 新增的創作者介紹欄位 -->
                     <div>
                         <label class="block text-sm font-medium text-slate-700 mb-1">創作者介紹</label>
                         <textarea id="creatorBio" rows="2" class="w-full p-2 border border-slate-300 rounded text-sm focus:ring-2 focus:ring-blue-200 outline-none" placeholder="簡單介紹創作者的專業背景或理念..."></textarea>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-slate-700 mb-1">版權文字 (Footer)</label>
-                        <input type="text" id="copyrightText" class="w-full p-2 border border-slate-300 rounded text-sm focus:ring-2 focus:ring-blue-200 outline-none" placeholder="© 2026 Tony AI. All rights reserved.">
+                        <input type="text" id="copyrightText" class="w-full p-2 border border-slate-300 rounded text-sm focus:ring-2 focus:ring-blue-200 outline-none" value="© 2020 TonyStudio (TONY 楊文澤顧問). All rights reserved." placeholder="© 2020 TonyStudio (TONY 楊文澤顧問). All rights reserved.">
                     </div>
                 </div>
 
@@ -416,13 +415,13 @@
                         <i class="fa-solid fa-robot"></i> <span class="hidden sm:inline">複製 Vibe Prompt</span><span class="sm:hidden">複製 Prompt</span>
                     </button>
                     <div class="h-6 w-px bg-slate-300 mx-1 hidden lg:block"></div>
-                    <button onclick="downloadJSON()" class="hidden lg:flex text-slate-600 hover:bg-slate-100 px-2 sm:px-3 py-1.5 rounded text-xs sm:text-sm border border-slate-300 items-center gap-1 bg-white shadow-sm transition-colors">
+                    <button onclick="downloadJSON()" class="hidden lg:flex text-slate-600 hover:bg-slate-100 px-2 sm:px-3 py-1.5 rounded text-xs sm:text-sm border border-slate-300 items-center gap-1 bg-white shadow-sm transition-colors font-medium">
                         <i class="fa-solid fa-code text-slate-400"></i> JSON
                     </button>
-                    <button onclick="downloadWord()" class="hidden lg:flex text-slate-600 hover:bg-slate-100 px-2 sm:px-3 py-1.5 rounded text-xs sm:text-sm border border-slate-300 items-center gap-1 bg-white shadow-sm transition-colors">
+                    <button onclick="downloadWord()" class="hidden lg:flex text-slate-600 hover:bg-slate-100 px-2 sm:px-3 py-1.5 rounded text-xs sm:text-sm border border-slate-300 items-center gap-1 bg-white shadow-sm transition-colors font-medium">
                         <i class="fa-solid fa-file-word text-blue-500"></i> Word
                     </button>
-                    <button onclick="downloadText()" class="hidden sm:flex text-slate-600 hover:bg-slate-100 px-2 sm:px-3 py-1.5 rounded text-xs sm:text-sm border border-slate-300 items-center gap-1 bg-white shadow-sm transition-colors">
+                    <button onclick="downloadText()" class="hidden sm:flex text-slate-600 hover:bg-slate-100 px-2 sm:px-3 py-1.5 rounded text-xs sm:text-sm border border-slate-300 items-center gap-1 bg-white shadow-sm transition-colors font-medium">
                         <i class="fa-solid fa-file-lines text-slate-500"></i> Txt
                     </button>
                 </div>
@@ -431,7 +430,7 @@
             <div class="flex-1 overflow-y-auto p-4 sm:p-8 relative pb-[max(env(safe-area-inset-bottom),2rem)]">
                 <div id="loadingState" class="hidden absolute inset-0 bg-white/90 z-20 flex flex-col items-center justify-center">
                     <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
-                    <p id="loadingText" class="text-slate-700 font-bold animate-pulse text-center px-4">正在透過 Gemini 3.7 Flash<br>為您撰寫規格書...</p>
+                    <p id="loadingText" class="text-slate-700 font-bold animate-pulse text-center px-4">正在透過 Gemini 3.8 Flash<br>為您處理資料...</p>
                 </div>
                 
                 <div id="emptyState" class="flex flex-col items-center justify-center h-full text-slate-400">
@@ -439,7 +438,7 @@
                         <i class="fa-solid fa-layer-group text-3xl text-blue-300"></i>
                     </div>
                     <p class="text-sm font-bold text-slate-600 mb-2">填寫左側表單，點擊「生成 PRD 規格書」</p>
-                    <p class="text-xs text-slate-400 text-center max-w-xs leading-relaxed">系統將為您生成直通 <strong class="text-slate-500">Gemini Canvas</strong><br>且完美整合 <strong class="text-slate-500">Firebase Serverless</strong> 架構的專業藍圖</p>
+                    <p class="text-xs text-slate-400 text-center max-w-xs leading-relaxed">系統將為您生成直通 <strong class="text-slate-500">Gemini Canvas</strong><br>且完美整合 <strong class="text-slate-500">Firebase Serverless</strong> 架構的專業藍圖<br><br>@2020 TonyStudio 版權所有</p>
                 </div>
 
                 <div id="previewContent" class="prose max-w-none hidden bg-white p-4 sm:p-8 rounded-lg shadow-sm border border-slate-200 min-h-full text-sm sm:text-base"></div>
@@ -458,7 +457,7 @@
             <div class="px-6 sm:px-8 pb-8 -mt-14 relative z-10">
                 <div class="flex flex-col items-center mb-6">
                     <img src="https://i.postimg.cc/Gh8Zt7SX/S_56844323.jpg" class="w-28 h-28 rounded-full border-4 border-white shadow-md object-cover bg-white">
-                    <h2 class="text-2xl font-bold text-slate-800 mt-3">TONY 楊文澤 老師</h2>
+                    <h2 class="text-2xl font-bold text-slate-800 mt-3">TONY 楊文澤 顧問</h2>
                     <p class="text-blue-600 font-medium text-sm mt-1">資深數位行銷科技顧問 | 生成式 AI 創作者 | 創業導師</p>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm text-slate-600">
@@ -497,8 +496,9 @@
                     </ul>
                 </div>
             </div>
-            <div class="bg-slate-50 p-4 border-t border-slate-100 flex justify-center rounded-b-lg">
-                 <button onclick="toggleAboutModal()" class="px-8 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-md font-medium transition-colors">關閉視窗</button>
+            <div class="bg-slate-50 p-4 border-t border-slate-100 flex flex-col justify-center items-center rounded-b-lg">
+                <button onclick="toggleAboutModal()" class="px-8 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-md font-medium transition-colors mb-2">關閉視窗</button>
+                <p class="text-xs text-slate-400">@2020 TonyStudio 版權所有</p>
             </div>
         </div>
     </div>
@@ -531,7 +531,7 @@
             onSnapshot, query, orderBy, deleteDoc, getDocs, updateDoc
         } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // TONY老師專屬的真實 Firebase 金鑰
+        // Firebase Setup
         const firebaseConfig = {
             apiKey: "AIzaSyB8CQ5YXid9SaVdydkoMuSrQSghPI6pAxU",
             authDomain: "e22-vibe-coding-specgeneration.firebaseapp.com",
@@ -546,7 +546,7 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // --- Custom UI Overrides ---
+        // UI Overrides
         window.showUiAlert = function(msg) {
             document.getElementById('uiAlertMessage').innerText = msg;
             document.getElementById('uiAlert').classList.remove('hidden');
@@ -564,13 +564,12 @@
             if (confirmResolver) { confirmResolver(result); confirmResolver = null; }
         };
 
-        // --- Global State ---
+        // State & API Key Logic
         let currentAuthMode = 'login';
         let unsubscribeHistory = null;
         window.db = db; 
         window.auth = auth;
         
-        // --- API Key UI Logic ---
         window.toggleUiApiKeyVisibility = () => {
             const input = document.getElementById('uiApiKeyInput');
             const icon = document.getElementById('uiApiKeyEyeIcon');
@@ -875,6 +874,8 @@
             const historyRef = collection(db, 'users', uid, 'history');
             const q = query(historyRef, orderBy('createdAt', 'desc'));
             
+            if (unsubscribeHistory) unsubscribeHistory();
+
             unsubscribeHistory = onSnapshot(q, (snapshot) => {
                 const list = document.getElementById('historyList');
                 document.getElementById('historyCount').innerText = `共 ${snapshot.size} 筆紀錄`;
@@ -926,8 +927,7 @@
                     list.innerHTML = `<div class="p-4 mt-2 bg-red-50 text-red-600 border border-red-200 rounded text-sm text-center">
                         <i class="fa-solid fa-triangle-exclamation mb-2 text-2xl"></i><br>
                         <strong>權限不足 (Permission Denied)</strong><br>
-                        請前往 Firebase 後台的 Firestore Rules 設定：<br>
-                        <code class="block bg-white/50 p-2 mt-2 text-left text-xs rounded">allow read, write: if request.auth != null;</code>
+                        請前往 Firebase 後台的 Firestore Rules 設定。
                     </div>`;
                 }
             });
@@ -966,7 +966,6 @@
     </script>
 
     <script>
-        // 確保將 creatorBio 加入收集名單
         const fields = [
             'projectName', 'oneLiner', 'background', 'targetUser', 'exclusions', 'successMetrics', 
             'devType', 'techStack', 'designStyle', 'apiKeyStrategy', 'features', 'aiRole',
@@ -1018,29 +1017,36 @@
             if(await window.showUiConfirm('確定要清空所有欄位嗎？這將無法復原。')) {
                 fields.forEach(id => {
                     const el = document.getElementById(id);
-                    if(el) el.value = '';
-                    if(id === 'devType' && el) el.value = '純前端/瀏覽器儲存';
+                    if(el) {
+                        if (id === 'appLogo') el.value = '🔮';
+                        else if (id === 'creatorName') el.value = 'Tony 老師';
+                        else if (id === 'copyrightText') el.value = '© 2020 TonyStudio (TONY 楊文澤顧問). All rights reserved.';
+                        else if (id === 'devType') el.value = '純前端 (HTML/JS + LocalStorage)';
+                        else el.value = '';
+                    }
                 });
             }
         };
 
+        // Enterprise-grade API wrapper
         async function callGemini(promptText, isJson = false) {
             const uiInput = document.getElementById('uiApiKeyInput');
             let apiKey = uiInput ? uiInput.value.trim() : "";
             
             if(!apiKey) {
-                window.showUiAlert("執行失敗：\n請先在右上角輸入您的「Gemini 3.7 Flash API Key」。\n若無金鑰，請點擊旁邊的連結免費申請。");
+                window.showUiAlert("執行失敗：\n請先在右上角輸入您的「Gemini API Key」。\n若無金鑰，請點擊旁邊的連結免費申請。");
                 throw new Error("缺少 API Key");
             }
             
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.7-flash:generateContent?key=${apiKey}`;
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`;
             const payload = { contents: [{ parts: [{ text: promptText }] }] };
+            // Although we request JSON via prompt, setting mimeType ensures strictness if supported
             if(isJson) payload.generationConfig = { responseMimeType: "application/json" };
 
             const response = await fetch(url, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) });
             if (!response.ok) {
                 if(response.status === 400 || response.status === 403) {
-                    throw new Error("API Key 無效或遭拒絕，請確認您申請的 Key 是否正確。");
+                    throw new Error("API Key 無效或遭到拒絕，請確認您申請的 Key 是否正確。");
                 }
                 throw new Error(`API 發生錯誤: ${response.status}`);
             }
@@ -1048,10 +1054,35 @@
             return result.candidates[0].content.parts[0].text;
         }
 
-        // --- Feature 1: AI Auto Fill (升級防禦版) ---
+        // Self-Healing JSON Parser (Robust Pipeline)
+        function extractAndParseJSON(rawText) {
+            try {
+                // First pass: try direct parse (ideal scenario)
+                return JSON.parse(rawText);
+            } catch (err1) {
+                console.warn("Direct JSON parsing failed. Engaging Self-Healing Regex Pipeline...");
+                try {
+                    // Remove markdown codeblock artifacts if any exist
+                    let cleanText = rawText.replace(/```json/gi, '').replace(/```/g, '').trim();
+                    // Extract strictly from the first '{' to the last '}'
+                    const match = cleanText.match(/\{[\s\S]*\}/);
+                    if (match && match[0]) {
+                        return JSON.parse(match[0]);
+                    }
+                    // If Regex fails, throw to outermost catch
+                    throw new Error("Regex Extraction Failed.");
+                } catch (err2) {
+                    console.error("Self-Healing Failed:", err2, "\nRaw Text:", rawText);
+                    throw new Error("AI 輸出的結構發生極端異常，無法自動修復，請再試一次。");
+                }
+            }
+        }
+
+        // --- Feature 1: AI Auto Fill (Enterprise & Few-Shot Version) ---
         window.autoFillForm = async () => {
             const data = getFormData();
-            if(!data.projectName && !data.oneLiner && !data.features) {
+            const comboText = (data.projectName + data.oneLiner + data.features).trim();
+            if(!comboText) {
                 return window.showUiAlert('提示：\n請至少填寫「專案名稱」、「一句話描述」或「功能需求列表」，AI 才能依據線索幫您發想藍圖！');
             }
 
@@ -1059,6 +1090,7 @@
             const origHTML = btn.innerHTML;
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> 發想中...';
             btn.disabled = true;
+            document.getElementById('loadingState').classList.remove('hidden');
 
             const prompt = `你是一位資深技術型產品經理 (Technical PM)，專精於使用「Gemini Canvas + Firebase」架構來開發 Web 應用。
             使用者目前提供的專案資訊如下：
@@ -1077,31 +1109,20 @@
                - designStyle: ["科技極簡 (黑白灰色調、大面積留白、Apple風格)", "專業商務 (藍灰色調、嚴謹排版、適合企業級 Dashboard)", "暗黑科技 (深色黑底、螢光色點綴、適合開發者工具或 AI 應用)", "溫馨親和 (暖色系、大圓角、適合教育或社群)", "優雅質感 (米白色調、纖細字體、適合生活風格或品牌展示)", "前衛新潮 (高飽和鮮明色彩、粗框線、活潑動態感)"]
                - aiRole: ["資深產品經理 (Product Manager)", "使用者體驗設計師 (UX Designer)", "Gemini Canvas 開發專家 (Tech Lead)"]
 
-            【預期輸出的 JSON 格式】：
-            {
-              "reasoning": "說明選擇該架構的理由...",
-              "background": "問題背景...",
-              "targetUser": "目標使用者...",
-              "exclusions": "不做什麼...",
-              "successMetrics": "成功標準...",
-              "features": "功能需求 (條列式)...",
-              "devType": "...",
-              "techStack": "...",
-              "apiKeyStrategy": "...",
-              "designStyle": "...",
-              "aiRole": "..."
-            }`;
+            【Few-Shot 結構化範例】：
+            {"reasoning":"因為需要會員紀錄，選擇完整 Serverless。","background":"解決現有資訊碎片化問題。","targetUser":"數位行銷人員","exclusions":"不包含金流與訂閱機制。","successMetrics":"使用者能順利登入並發布內容。","features":"- 會員登入註冊\\n- 內容建立與保存","devType":"Serverless 會員制 (Firebase Auth + Firestore)","techStack":"HTML單檔, Tailwind, JS, Firebase (Auth/Firestore), Gemini API","apiKeyStrategy":"使用者自行輸入 (Session/Local)","designStyle":"專業商務 (藍灰色調、嚴謹排版、適合企業級 Dashboard)","aiRole":"Gemini Canvas 開發專家 (Tech Lead)"}
+
+            【強制錨定】：請直接輸出 JSON 字串，絕對不要包含 \`\`\`json 等 Markdown 標記，必須以 { 開頭並以 } 結尾。`;
 
             try {
                 const jsonText = await callGemini(prompt, true);
-                const cleanJsonText = jsonText.replace(/```json/g, '').replace(/```/g, '').trim();
-                const aiData = JSON.parse(cleanJsonText);
+                const aiData = extractAndParseJSON(jsonText);
                 
                 let finalDevType = aiData.devType || "";
                 let finalTechStack = aiData.techStack || "";
                 
-                // 強制攔截：只要有敏感字，直接綁死為會員制，徹底消除純前端與 React 的幻覺！
-                const checkText = ((aiData.features || "") + (aiData.successMetrics || "") + (data.features || "") + (data.oneLiner || "")).toLowerCase();
+                // 強制攔截：消除純前端幻覺，全面鎖定 HTML 單檔 + Firebase 全餐
+                const checkText = ((aiData.features || "") + (aiData.successMetrics || "") + (data.features || "") + (comboText)).toLowerCase();
                 
                 if (checkText.includes("登入") || checkText.includes("註冊") || checkText.includes("綁定") || checkText.includes("auth") || checkText.includes("跨裝置") || checkText.includes("健康檔案") || checkText.includes("同步") || checkText.includes("家人")) {
                     finalDevType = "Serverless 會員制 (Firebase Auth + Firestore)";
@@ -1111,7 +1132,7 @@
                     if(finalTechStack === "HTML單檔, Tailwind, JS, Gemini API") finalTechStack = "HTML, Tailwind, JS, Firebase (Firestore/Storage), Gemini API";
                 }
 
-                if(finalTechStack.includes("React")) {
+                if(finalTechStack.includes("React") || finalTechStack.includes("單檔, Tailwind, JS, Firebase (Auth/Firestore), Gemini API")) {
                     finalTechStack = "HTML單檔, Tailwind, JS, Firebase (Auth/Firestore), Gemini API";
                 }
 
@@ -1134,10 +1155,11 @@
                 
                 window.showUiAlert('✨ 魔法完成！\nAI 已為您填入完整的產品架構草稿！並且已啟動【防呆保護】，確保前後端技術邏輯完美一致。');
             } catch(e) {
-                if(e.message !== "缺少 API Key") window.showUiAlert('AI 發想失敗: \n' + e.message);
+                if(e.message !== "缺少 API Key") window.showUiAlert('AI 發想失敗: \n' + e.message + '\n系統已安全降級，請重試。');
             } finally {
                 btn.innerHTML = origHTML;
                 btn.disabled = false;
+                document.getElementById('loadingState').classList.add('hidden');
             }
         };
 
@@ -1181,7 +1203,7 @@
                 
                 if(window.saveToCloudHistory) window.saveToCloudHistory('健檢', data, text);
             } catch(e) {
-                if(e.message !== "缺少 API Key") window.showUiAlert('健檢失敗: \n' + e.message);
+                if(e.message !== "缺少 API Key") window.showUiAlert('健檢發生異常: \n' + e.message);
                 document.getElementById('emptyState').classList.remove('hidden');
             } finally {
                 btn.innerHTML = origHTML;
@@ -1238,7 +1260,7 @@
                 
                 if(window.saveToCloudHistory) window.saveToCloudHistory('PRD', data, text);
             } catch(e) {
-                if(e.message !== "缺少 API Key") window.showUiAlert('生成失敗: \n' + e.message);
+                if(e.message !== "缺少 API Key") window.showUiAlert('生成發生異常: \n' + e.message);
                 document.getElementById('emptyState').classList.remove('hidden');
             } finally {
                 btn.innerHTML = origHTML;
